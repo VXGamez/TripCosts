@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Dyvide</string>
+
+    <string-array name="fuel_types">
+        <item>Diesel</item>
+        <item>Gasoline</item>
+        <item>Electric</item>
+    </string-array>
+
 </resources>

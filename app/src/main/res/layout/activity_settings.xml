@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:mstb="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -27,5 +28,273 @@
             android:background="@drawable/white_car" />
 
     </RelativeLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/carReycle"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:maxHeight="100dp"
+        android:orientation="horizontal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:id="@+id/currentName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="#FAFAFA"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/newCar"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="Add a New Vehicle"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/triaCoche"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:scaleType="fitCenter"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/roundedxml"
+                android:src="@drawable/ic_car" />
+
+            <ImageButton
+                android:id="@+id/triaMoto"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:scaleType="fitCenter"
+                android:background="@drawable/roundedxml"
+                android:src="@drawable/ic_moto"  />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="160dp"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:text="Choose vehicle type: "/>
+
+            <TextView
+                android:id="@+id/type"
+                android:layout_width="80dp"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:text=""/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#7ED31F"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentTop="true"
+            />
+
+        <org.honorato.multistatetogglebutton.MultiStateToggleButton
+            android:id="@+id/mstb_multi_id"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#80000000"
+            android:layout_marginTop="10dip"
+            mstb:values="@array/fuel_types" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#7ED31F"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentTop="true"
+            />
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:textAlignment="textStart"
+            android:layout_marginLeft="80dp"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Vehicle Name:"/>
+
+        <EditText
+            android:id="@+id/addCarName"
+            android:layout_marginLeft="80dp"
+            android:layout_width="250dp"
+            android:hint="vehicle name"
+            android:layout_height="40dp"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:textAlignment="textStart"
+            android:layout_marginLeft="80dp"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Consumption every 100km:"/>
+
+        <EditText
+            android:id="@+id/addCarConsu"
+            android:layout_marginLeft="80dp"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:hint="consumption"
+            android:inputType="numberDecimal"/>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:text="Save"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:textSize="20dp"
+        android:background="@drawable/roundedxml"
+        android:textColor="#FFFF"
+        android:layout_gravity="center"/>
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@android:color/transparent"
+            android:text="Cancel"
+            android:textColor="#f44336"
+            android:textSize="17dp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/carInfo"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/carNameFuel"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="30dp"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text=""/>
+
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="30dp"
+            android:textAlignment="textStart"
+            android:layout_marginLeft="80dp"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Vehicle Name:"/>
+
+        <EditText
+            android:id="@+id/editCarName"
+            android:layout_marginLeft="80dp"
+            android:layout_width="250dp"
+            android:hint="vehicle name"
+            android:layout_height="40dp"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:textAlignment="textStart"
+            android:layout_marginLeft="80dp"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Consumption every 100km:"/>
+
+        <EditText
+            android:id="@+id/editCarConsu"
+            android:layout_marginLeft="80dp"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:hint="consumption"
+            android:inputType="numberDecimal"/>
+
+        <Button
+            android:id="@+id/update"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="40dp"
+            android:text="Update"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textSize="20dp"
+            android:background="@drawable/roundedxml"
+            android:textColor="#FFFF"
+            android:layout_gravity="center"/>
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@android:color/transparent"
+            android:text="Delete"
+            android:textColor="#f44336"
+            android:textSize="17dp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
 
 </LinearLayout>
