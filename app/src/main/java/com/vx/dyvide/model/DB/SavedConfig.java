@@ -15,7 +15,6 @@ public class SavedConfig {
 
     @Id(assignable = true) public long id;
     public int selectedVehicle;
-    public boolean hasVehicles;
     public String vehicles;
 
 
@@ -50,13 +49,6 @@ public class SavedConfig {
         this.selectedVehicle = selectedVehicle;
     }
 
-    public boolean isHasVehicles() {
-        return hasVehicles;
-    }
-
-    public void setHasVehicles(boolean hasVehicles) {
-        this.hasVehicles = hasVehicles;
-    }
 
     public String getVehicles() {
         return vehicles;

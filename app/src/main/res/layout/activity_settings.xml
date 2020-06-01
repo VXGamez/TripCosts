@@ -163,6 +163,7 @@
             android:layout_marginLeft="80dp"
             android:layout_width="250dp"
             android:hint="vehicle name"
+            android:backgroundTint="@color/colorPrimary"
             android:layout_height="40dp"
             android:inputType="text" />
 
@@ -182,6 +183,7 @@
             android:layout_marginLeft="80dp"
             android:layout_width="250dp"
             android:layout_height="40dp"
+            android:backgroundTint="@color/colorPrimary"
             android:hint="consumption"
             android:inputType="numberDecimal"/>
 
@@ -247,6 +249,7 @@
             android:layout_marginLeft="80dp"
             android:layout_width="250dp"
             android:hint="vehicle name"
+            android:backgroundTint="@color/colorPrimary"
             android:layout_height="40dp"
             android:inputType="text" />
 
@@ -265,6 +268,7 @@
             android:id="@+id/editCarConsu"
             android:layout_marginLeft="80dp"
             android:layout_width="250dp"
+            android:backgroundTint="@color/colorPrimary"
             android:layout_height="40dp"
             android:hint="consumption"
             android:inputType="numberDecimal"/>

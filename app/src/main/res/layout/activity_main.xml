@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/colorPrimary"
+        android:layout_marginBottom="10dp"
         android:elevation="4dp">
 
         <ImageView
@@ -29,5 +30,23 @@
             android:background="@drawable/settings"/>
 
     </RelativeLayout>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="60dp"
+        android:id="@+id/user_menu"
+        android:name="com.vx.dyvide.controller.fragments.TypeMenuFragment"
+        tools:layout="@layout/menu_fragment">
+    </fragment>
+
+
+    <FrameLayout
+
+        android:id="@+id/typeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="110dp"
+        />
 
 </RelativeLayout>
