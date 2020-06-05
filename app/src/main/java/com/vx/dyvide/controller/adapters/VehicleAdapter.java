@@ -1,4 +1,4 @@
-package com.prpr.androidpprog2.entregable.controller.adapters;
+package com.vx.dyvide.controller.adapters;
 
 
 import android.content.Context;

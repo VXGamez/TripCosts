@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SwitchCompatTheme">
+        <item name="colorControlActivated">#7ED31F</item>
+    </style>
+
 </resources>

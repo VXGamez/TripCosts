@@ -22,8 +22,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.prpr.androidpprog2.entregable.controller.adapters.VehicleAdapter;
 import com.vx.dyvide.R;
+import com.vx.dyvide.controller.adapters.VehicleAdapter;
 import com.vx.dyvide.controller.callbacks.DialogCallback;
 import com.vx.dyvide.controller.callbacks.VehicleCallback;
 import com.vx.dyvide.controller.dialogs.OptionDialog;

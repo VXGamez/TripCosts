@@ -4,30 +4,36 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.vx.dyvide.R;
-import com.vx.dyvide.controller.activities.SettingsActivity;
 import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
 import com.vx.dyvide.model.DB.SavedConfig;
-import com.vx.dyvide.model.Vehicle;
-
-import java.util.ArrayList;
 
 public class ManualFragment  extends Fragment {
 
     private EditText totalKM;
+    private EditText totalTolls;
     private EditText totalPassengers;
     private Button calculate;
+    private Switch peatges;
+    private boolean wantsTolls;
+    private LinearLayout tolls;
+
+    private TextView totalCost;
 
 
     @Override
@@ -36,6 +42,24 @@ public class ManualFragment  extends Fragment {
 
 
         View view = inflater.inflate(R.layout.manual_fragment, container, false);
+        tolls = view.findViewById(R.id.tolls);
+        tolls.setVisibility(View.GONE);
+        totalCost = view.findViewById(R.id.totalCost);
+        totalCost.setVisibility(View.INVISIBLE);
+        totalTolls = view.findViewById(R.id.tollCost);
+        peatges = view.findViewById(R.id.tollSwitch);
+        peatges.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                wantsTolls = isChecked;
+                if(isChecked){
+                    tolls.setVisibility(View.VISIBLE);
+                }else{
+                    tolls.setVisibility(View.GONE);
+                    totalTolls.setText("");
+                }
+            }
+        });
 
         totalKM = view.findViewById(R.id.totalKM);
         totalPassengers = view.findViewById(R.id.totalPassengers);
@@ -46,10 +70,17 @@ public class ManualFragment  extends Fragment {
             public void onClick(View v) {
                 String ok= "";
                 if(totOk()){
-                    Double total = calculateTotalCost();
-                    ok = round(total, 2) + " x Pers";
+                    if(DB.hasCars()){
+                        float total = calculateTotalCost();
+                        ok = round(total, 2) + "€ x Pers.";
+                        totalCost.setVisibility(View.VISIBLE);
+                        totalCost.setText("Total: "+ ok);
+                    }else{
+                        ok = "Please setup a car!";
+                    }
+
                 }else{
-                    ok = "Please fill everything";
+                    ok = "Please fill everything!";
                 }
                 Toast toast = Toast.makeText(getActivity(), ok, Toast.LENGTH_SHORT);
                 View view = toast.getView();
@@ -57,8 +88,8 @@ public class ManualFragment  extends Fragment {
                 TextView text = view.findViewById(android.R.id.message);
                 text.setTextColor(Color.WHITE);
                 text.setTypeface(text.getTypeface(), Typeface.BOLD);
+                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 170);
                 toast.show();
-
             }
         });
 
@@ -84,11 +115,26 @@ public class ManualFragment  extends Fragment {
         return (double) tmp / factor;
     }
 
-    private Double calculateTotalCost(){
-        Double totalCost;
+    private float calculateTotalCost(){
+        float totalCost;
         float consum = DB.getVehicles().get(ObjectBox.get().boxFor(SavedConfig.class).get(1).selectedVehicle).getConsum();
-        totalCost = (((consum/100)*Integer.parseInt(totalKM.getText().toString()))*1.101)/Integer.parseInt(totalPassengers.getText().toString());
-        return totalCost;
+        float fuelCost = 0;
+        float fuelType = DB.getVehicles().get(ObjectBox.get().boxFor(SavedConfig.class).get(1).selectedVehicle).getFuel();
+        if(fuelType == 0){
+            //diesel
+            fuelCost = (float) 1.002;
+        }else if(fuelType == 1){
+            //gasolina
+            fuelCost = (float) 1.112;
+        }else if(fuelType == 2){
+            //electric
+            fuelCost = -1;
+        }
+        totalCost = (((consum/100)*Integer.parseInt(totalKM.getText().toString()))*fuelCost);
+        if(wantsTolls){
+            totalCost += Float.parseFloat(totalTolls.getText().toString());
+        }
+        return totalCost/Integer.parseInt(totalPassengers.getText().toString());
     }
 
 }

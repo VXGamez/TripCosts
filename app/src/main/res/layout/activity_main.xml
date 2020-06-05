@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".controller.activities.MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/colorPrimary"
-        android:layout_marginBottom="10dp"
         android:elevation="4dp">
 
         <ImageView
@@ -31,22 +31,49 @@
 
     </RelativeLayout>
 
-    <fragment
+
+
+    <!--<fragment
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="60dp"
         android:id="@+id/user_menu"
         android:name="com.vx.dyvide.controller.fragments.TypeMenuFragment"
         tools:layout="@layout/menu_fragment">
-    </fragment>
+    </fragment>-->
 
 
     <FrameLayout
 
-        android:id="@+id/typeLayout"
+        android:id="@+id/test"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="110dp"
-        />
+        >
 
-</RelativeLayout>
+        <FrameLayout
+
+            android:id="@+id/typeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom">
+
+            <com.google.android.gms.ads.AdView
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                ads:adSize="BANNER"
+                ads:adUnitId="ca-app-pub-6805626204344763/6103387771">
+            </com.google.android.gms.ads.AdView>
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+</LinearLayout>
