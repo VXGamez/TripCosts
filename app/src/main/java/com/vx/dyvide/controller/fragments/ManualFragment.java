@@ -43,7 +43,7 @@ public class ManualFragment  extends Fragment {
 
         View view = inflater.inflate(R.layout.manual_fragment, container, false);
         tolls = view.findViewById(R.id.tolls);
-        tolls.setVisibility(View.GONE);
+        tolls.setVisibility(View.INVISIBLE);
         totalCost = view.findViewById(R.id.totalCost);
         totalCost.setVisibility(View.INVISIBLE);
         totalTolls = view.findViewById(R.id.tollCost);
@@ -55,7 +55,7 @@ public class ManualFragment  extends Fragment {
                 if(isChecked){
                     tolls.setVisibility(View.VISIBLE);
                 }else{
-                    tolls.setVisibility(View.GONE);
+                    tolls.setVisibility(View.INVISIBLE);
                     totalTolls.setText("");
                 }
             }

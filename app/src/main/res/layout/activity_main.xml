@@ -33,13 +33,13 @@
 
 
 
-    <!--<fragment
+    <fragment
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:id="@+id/user_menu"
         android:name="com.vx.dyvide.controller.fragments.TypeMenuFragment"
         tools:layout="@layout/menu_fragment">
-    </fragment>-->
+    </fragment>
 
 
     <FrameLayout
@@ -69,8 +69,14 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 ads:adSize="BANNER"
-                ads:adUnitId="ca-app-pub-6805626204344763/6103387771">
+                ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
             </com.google.android.gms.ads.AdView>
+            <!--
+            MINE:
+            ca-app-pub-6805626204344763/6103387771
+            TEST ADS:
+            ca-app-pub-3940256099942544/6300978111
+            -->
         </RelativeLayout>
 
 

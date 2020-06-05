@@ -1,20 +1,25 @@
 package com.vx.dyvide.controller.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -55,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         setContentView(R.layout.activity_main);
         ObjectBox.init(getApplicationContext());
         getScreenSize();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -65,41 +71,10 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-       /* mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
 
-            }
-
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
-        */
         //FuelManager.getInstance(this).getFuelPrice(1,52.53087,13.44176,this);
+
+
 
 
 
@@ -118,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         });
 
 
-       /* bigView = (View) findViewById(R.id.view_big_bar);
+       bigView = (View) findViewById(R.id.view_big_bar);
 
         SpringForce springForce = new SpringForce(0).setDampingRatio(SpringForce.DAMPING_RATIO_LOW_BOUNCY)
                 .setStiffness(SpringForce.STIFFNESS_MEDIUM);
@@ -126,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         springAnimation = new SpringAnimation(bigView, DynamicAnimation.TRANSLATION_X).setSpring(springForce);
         springAnimation.animateToFinalPosition(130);
         auto = (TextView) findViewById(R.id.autoRoute);
+        initAuto();
         auto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,10 +115,11 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
             public void onClick(View view) {
                 initManual();
             }
-        });*/
-        initManual();
+        });
 
     }
+
+
 
     void getScreenSize(){
         Display display = getWindowManager().getDefaultDisplay();
@@ -152,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     }
 
     private void initManual() {
-        //springAnimation.animateToFinalPosition(130+this.width/2);
+        springAnimation.animateToFinalPosition(130+this.width/2);
         ManualFragment manualFragment = new ManualFragment();
 
         FragmentManager manager = getSupportFragmentManager();
@@ -162,8 +139,6 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     }
 
     void initAuto(){
-
-
         springAnimation.animateToFinalPosition(130);
         AutoFragment autoFragment = new AutoFragment();
 

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Dyvide</string>
-
+    <string name="google_maps_key">AIzaSyB6M4VO_cNryZSJWeZdiFCWiRlDmI38EiQ</string>
+    <!--<string name="google_maps_key">AIzaSyBCF4eV_XDTWCUVghg-qq9jwToWTwwI2uI</string>-->
     <string-array name="fuel_types">
         <item>Diesel</item>
         <item>Gasoline</item>
