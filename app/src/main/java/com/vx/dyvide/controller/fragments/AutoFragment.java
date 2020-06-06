@@ -60,6 +60,12 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.vx.dyvide.R;
+import com.vx.dyvide.model.DB.DB;
+import com.vx.dyvide.model.DB.ObjectBox;
+import com.vx.dyvide.model.DB.SavedConfig;
+import com.vx.dyvide.model.directionhelpers.FetchURL;
+import com.vx.dyvide.model.directionhelpers.TaskLoadedCallback;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -73,7 +79,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class AutoFragment extends Fragment implements OnMapReadyCallback {
+import static com.vx.dyvide.controller.fragments.ManualFragment.round;
+
+public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLoadedCallback {
 
     private GoogleMap map;
     private ScrollView scrollView;
@@ -82,9 +90,12 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback {
     private LatLng origin;
     private LatLng destination;
     private EditText originTXT;
+    private EditText totalPassengers;
     private TextView totalKM;
+    private int totalKMCalculats=0;
     private EditText destinationTXT;
 
+    private Polyline currentPolyline;
     private Button calculate;
 
 
@@ -97,6 +108,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback {
 
         scrollView = view.findViewById(R.id.statisticsScrollview);
         totalKM = view.findViewById(R.id.totalKM);
+        totalKM.setText("Total distance: 0 km");
+        totalPassengers = view.findViewById(R.id.totalPassengers);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         originTXT= view.findViewById(R.id.originTXT);
         originTXT.addTextChangedListener(new TextWatcher() {
@@ -171,18 +184,28 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback {
         calculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String ok = "";
                 if(totOK()){
-                    drawRoute();
+                    if(DB.hasCars()){
+                        float total = calculateTotalCost();
+                        ok = round(total, 2) + "€ x Pers.";
+                        //totalCost.setVisibility(View.VISIBLE);
+                        //totalCost.setText("Total: "+ ok);
+                    }else{
+                        ok = "Please setup a car!";
+                    }
+
                 }else{
-                    Toast toast = Toast.makeText(getActivity(), "Please fill everything", Toast.LENGTH_SHORT);
-                    View view = toast.getView();
-                    view.getBackground().setColorFilter(Color.parseColor("#7ED31F"), PorterDuff.Mode.SRC_IN);
-                    TextView text = view.findViewById(android.R.id.message);
-                    text.setTextColor(Color.WHITE);
-                    text.setTypeface(text.getTypeface(), Typeface.BOLD);
-                    toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 170);
-                    toast.show();
+                    ok = "Please fill everything!";
                 }
+                Toast toast = Toast.makeText(getActivity(), ok, Toast.LENGTH_SHORT);
+                View view = toast.getView();
+                view.getBackground().setColorFilter(Color.parseColor("#7ED31F"), PorterDuff.Mode.SRC_IN);
+                TextView text = view.findViewById(android.R.id.message);
+                text.setTextColor(Color.WHITE);
+                text.setTypeface(text.getTypeface(), Typeface.BOLD);
+                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 570);
+                toast.show();
             }
         });
 
@@ -222,11 +245,41 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback {
         return view;
     }
 
+    private float calculateTotalCost() {
+        float totalCost;
+        float consum = DB.getVehicles().get(ObjectBox.get().boxFor(SavedConfig.class).get(1).selectedVehicle).getConsum();
+        float fuelCost = 0;
+        float fuelType = DB.getVehicles().get(ObjectBox.get().boxFor(SavedConfig.class).get(1).selectedVehicle).getFuel();
+        if(fuelType == 0){
+            //diesel
+            fuelCost = (float) 1.002;
+        }else if(fuelType == 1){
+            //gasolina
+            fuelCost = (float) 1.112;
+        }else if(fuelType == 2){
+            //electric
+            fuelCost = -1;
+        }
+        totalCost = ((consum/100)*metersToKM()*fuelCost);
+        //if(wantsTolls){
+        //    totalCost += Float.parseFloat(totalTolls.getText().toString());
+        //}
+        return totalCost/Integer.parseInt(totalPassengers.getText().toString());
+    }
+
+    private float metersToKM() {
+        return totalKMCalculats/1000;
+    }
+
     private boolean totOK() {
         boolean ok = true;
         if(origin==null){
             ok = false;
         }else if(destination==null){
+            ok = false;
+        }else if(totalPassengers.getText().equals("")){
+            ok = false;
+        }else if(totalKMCalculats == 0){
             ok = false;
         }
         return ok;
@@ -346,9 +399,32 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void drawRoute() {
-
+        new FetchURL(this).execute(getUrl(origin, destination, "driving"), "driving");
     }
 
+
+    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String mode = "mode=" + directionMode;
+        String parameters = str_origin + "&" + str_dest + "&" + mode;
+        String output = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
+        return url;
+    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+        currentPolyline = map.addPolyline((PolylineOptions) values[0]);
+    }
+
+    @Override
+    public void totalValues(String totalKM, int totalDistanceValue, String totalDuration, int totalDurationValue) {
+        this.totalKM.setText("Total distance: " + totalKM);
+        this.totalKMCalculats = totalDistanceValue;
+    }
 
 
 }

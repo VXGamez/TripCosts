@@ -88,7 +88,7 @@ public class ManualFragment  extends Fragment {
                 TextView text = view.findViewById(android.R.id.message);
                 text.setTextColor(Color.WHITE);
                 text.setTypeface(text.getTypeface(), Typeface.BOLD);
-                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 170);
+                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 570);
                 toast.show();
             }
         });
