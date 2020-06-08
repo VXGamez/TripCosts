@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="30dp"
+    android:height="34dp"
+    android:viewportWidth="135"
+    android:viewportHeight="153">
+  <path
+      android:pathData="M135,67.535C135,30.237 104.854,0 67.667,0L34,67.535L67.667,153L82.268,133.473C112.434,126.783 135,99.804 135,67.535Z"
+      android:strokeWidth="1"
+      android:fillColor="#8ED61D"
+      android:fillType="nonZero"
+      android:strokeColor="#00000000"/>
+  <path
+      android:pathData="M0,67.535C0,99.804 22.789,126.783 53.254,133.473L68,153L68,0C30.445,0 0,30.237 0,67.535Z"
+      android:strokeWidth="1"
+      android:fillColor="#7ED31F"
+      android:fillType="nonZero"
+      android:strokeColor="#00000000"/>
+  <path
+      android:pathData="M67.667,18L43,67.5L67.667,117C94.913,117 117,94.838 117,67.5C117,40.162 94.913,18 67.667,18Z"
+      android:strokeWidth="1"
+      android:fillColor="#FFFFFF"
+      android:fillType="nonZero"
+      android:strokeColor="#00000000"/>
+  <path
+      android:pathData="M18,67.5C18,94.838 40.386,117 68,117L68,18C40.386,18 18,40.162 18,67.5Z"
+      android:strokeWidth="1"
+      android:fillColor="#FFFFFF"
+      android:fillType="nonZero"
+      android:strokeColor="#00000000"/>
+  <path
+      android:pathData="M67.195,92.879C74.766,92.879 80.813,90.529 85.336,85.83C89.859,81.131 92.121,74.621 92.121,66.301C92.121,57.91 89.842,51.359 85.283,46.648C80.725,41.938 74.648,39.582 67.055,39.582C62.859,39.582 59.156,40.262 55.945,41.621C53.531,42.629 51.311,44.176 49.283,46.262C47.256,48.348 45.656,50.703 44.484,53.328C42.914,56.891 42.129,61.297 42.129,66.547C42.129,74.75 44.391,81.189 48.914,85.865C53.438,90.541 59.531,92.879 67.195,92.879ZM67.16,83.984C63.012,83.984 59.59,82.479 56.895,79.467C54.199,76.455 52.852,72.031 52.852,66.195C52.852,60.266 54.164,55.83 56.789,52.889C59.414,49.947 62.871,48.477 67.16,48.477C71.449,48.477 74.889,49.93 77.479,52.836C80.068,55.742 81.363,60.148 81.363,66.055C81.363,72.031 80.033,76.514 77.373,79.502C74.713,82.49 71.309,83.984 67.16,83.984Z"
+      android:strokeWidth="1"
+      android:fillColor="#8ED61D"
+      android:fillType="nonZero"
+      android:strokeColor="#00000000"/>
+</vector>

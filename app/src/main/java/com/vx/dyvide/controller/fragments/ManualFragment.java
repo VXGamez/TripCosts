@@ -80,9 +80,9 @@ public class ManualFragment  extends Fragment {
                     }
 
                 }else{
-                    ok = "Please fill everything!";
+                    ok = "Non-valid values. Please fill again";
                 }
-                Toast toast = Toast.makeText(getActivity(), ok, Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getActivity(), ok, Toast.LENGTH_LONG);
                 View view = toast.getView();
                 view.getBackground().setColorFilter(Color.parseColor("#7ED31F"), PorterDuff.Mode.SRC_IN);
                 TextView text = view.findViewById(android.R.id.message);
@@ -102,6 +102,14 @@ public class ManualFragment  extends Fragment {
             ok = false;
         }else if(totalKM.getText().toString().equals("")){
             ok = false;
+        }else if(Float.parseFloat(totalKM.getText().toString())<=0){
+            ok = false;
+        }else if(Float.parseFloat(totalPassengers.getText().toString())<=0 || Float.parseFloat(totalPassengers.getText().toString())>=10){
+            ok = false;
+        }else if(wantsTolls){
+            if(Float.parseFloat(totalTolls.getText().toString())<=0){
+                ok = false;
+            }
         }
         return ok;
     }

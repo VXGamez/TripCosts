@@ -68,11 +68,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback, Mic
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        RouteManager.getInstance(this).getRouteRoadsheet(new LatLng(41.409720, 2.139490), new LatLng(42.288960, 3.278390), 0, 7.7f, 1.48f, this);
-
-
-
-
+        //RouteManager.getInstance(this).getRouteRoadsheet(new LatLng(41.409720, 2.139490), new LatLng(42.288960, 3.278390), 0, 7.7f, 1.48f, this);
 
         if(!DB.hasConfig()){
             DB.createConfig();

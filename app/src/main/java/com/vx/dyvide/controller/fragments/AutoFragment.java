@@ -1,11 +1,16 @@
 package com.vx.dyvide.controller.fragments;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -41,9 +46,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -75,10 +83,45 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     private TextView totalKM;
     private int totalKMCalculats=0;
     private EditText destinationTXT;
+    private Marker originMarker;
+    private Marker destinationMarker;
+
+    private ImageButton swapDestinations;
 
     private Polyline currentPolyline;
     private Button calculate;
 
+    private void swapDestinations(){
+        LatLng tmp = destination;
+        destination = origin;
+        origin = tmp;
+        repaintMap();
+    }
+
+    private void repaintMap() {
+
+        if(origin!=null){
+            destinationMarker.remove();
+            destinationMarker = null;
+            originMarker = map.addMarker(new MarkerOptions().position(origin).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
+        }
+        if(destination!=null){
+            originMarker.remove();
+            originMarker = null;
+            destinationMarker = map.addMarker(new MarkerOptions().position(destination).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_dpin))));
+        }
+    }
+
+    private Bitmap getBitmap(int drawableRes) {
+        Drawable drawable = getResources().getDrawable(drawableRes);
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,6 +132,21 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
         scrollView = view.findViewById(R.id.statisticsScrollview);
         totalKM = view.findViewById(R.id.totalKM);
+        swapDestinations= view.findViewById(R.id.swap);
+        swapDestinations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(destination==null && origin ==null) {
+                    makeCustomToast("Please setup origin or destination first");
+                }else{
+                    swapDestinations();
+                    String tmpString = destinationTXT.getText().toString();
+                    destinationTXT.setText(originTXT.getText().toString());
+                    originTXT.setText(tmpString);
+                }
+            }
+        });
+
         totalKM.setText("Total distance: 0 km");
         totalPassengers = view.findViewById(R.id.totalPassengers);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -177,16 +235,9 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                     }
 
                 }else{
-                    ok = "Please fill everything!";
+                    ok = "Non-valid values. Please fill again";
                 }
-                Toast toast = Toast.makeText(getActivity(), ok, Toast.LENGTH_SHORT);
-                View view = toast.getView();
-                view.getBackground().setColorFilter(Color.parseColor("#7ED31F"), PorterDuff.Mode.SRC_IN);
-                TextView text = view.findViewById(android.R.id.message);
-                text.setTextColor(Color.WHITE);
-                text.setTypeface(text.getTypeface(), Typeface.BOLD);
-                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 570);
-                toast.show();
+                makeCustomToast(ok);
             }
         });
 
@@ -262,7 +313,10 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             ok = false;
         }else if(totalKMCalculats == 0){
             ok = false;
+        }else if(Float.parseFloat(totalPassengers.getText().toString())<=0 || Float.parseFloat(totalPassengers.getText().toString())>=10){
+            ok = false;
         }
+
         return ok;
     }
 
@@ -308,7 +362,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             public void onSuccess(Location location) {
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                 origin = loc;
-                map.addMarker(new MarkerOptions().position(loc).title("My Location"));
+                originMarker = map.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
                 updateMapZoom();
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -346,11 +400,13 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
             if(isOrigin){
                 origin = loc;
+                originMarker = map.addMarker(new MarkerOptions().position(origin).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
             }else{
                 destination = loc;
+                destinationMarker = map.addMarker(new MarkerOptions().position(destination).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_dpin))));
             }
 
-            map.addMarker(new MarkerOptions().position(loc).title("Destination"));
+
             updateMapZoom();
         }
     }
@@ -392,6 +448,17 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         String output = "json";
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
         return url;
+    }
+
+    private void makeCustomToast(String ok){
+        Toast toast = Toast.makeText(getActivity(), ok, Toast.LENGTH_SHORT);
+        View view = toast.getView();
+        view.getBackground().setColorFilter(Color.parseColor("#7ED31F"), PorterDuff.Mode.SRC_IN);
+        TextView text = view.findViewById(android.R.id.message);
+        text.setTextColor(Color.WHITE);
+        text.setTypeface(text.getTypeface(), Typeface.BOLD);
+        toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 570);
+        toast.show();
     }
 
     @Override
