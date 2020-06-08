@@ -1,4 +1,4 @@
-package com.vx.dyvide.model;
+package com.vx.dyvide.model.HERE;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

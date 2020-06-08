@@ -1,8 +1,6 @@
-package com.vx.dyvide.model.directionhelpers;
+package com.vx.dyvide.model.HERE.directionhelpers;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;

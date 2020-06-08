@@ -1,4 +1,4 @@
-package com.vx.dyvide.model.directionhelpers;
+package com.vx.dyvide.model.HERE.directionhelpers;
 
 import com.google.android.gms.maps.model.LatLng;
 

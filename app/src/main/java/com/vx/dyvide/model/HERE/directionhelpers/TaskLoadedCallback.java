@@ -1,4 +1,4 @@
-package com.vx.dyvide.model.directionhelpers;
+package com.vx.dyvide.model.HERE.directionhelpers;
 
 /**
  * Created by Vishal on 10/20/2018.

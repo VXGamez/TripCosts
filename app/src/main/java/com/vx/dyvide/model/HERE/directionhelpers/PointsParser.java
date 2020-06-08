@@ -1,9 +1,7 @@
-package com.vx.dyvide.model.directionhelpers;
+package com.vx.dyvide.model.HERE.directionhelpers;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;

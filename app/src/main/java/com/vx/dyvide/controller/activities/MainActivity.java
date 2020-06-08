@@ -1,49 +1,41 @@
 package com.vx.dyvide.controller.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.vx.dyvide.R;
 import com.vx.dyvide.controller.fragments.AutoFragment;
 import com.vx.dyvide.controller.fragments.ManualFragment;
 import com.vx.dyvide.controller.restAPI.HERE.callbacks.HereCallback;
-import com.vx.dyvide.controller.restAPI.HERE.managers.FuelManager;
+import com.vx.dyvide.controller.restAPI.Michelin.callbacks.MichelinCallback;
+import com.vx.dyvide.controller.restAPI.Michelin.managers.RouteManager;
 import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
-import com.vx.dyvide.model.PriceResponse;
+import com.vx.dyvide.model.HERE.PriceResponse;
+import com.vx.dyvide.model.Michelin.Iti;
+import com.vx.dyvide.model.Michelin.Resposta;
 
-import io.objectbox.android.AndroidObjectBrowser;
-import io.objectbox.android.BuildConfig;
+import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements HereCallback {
+public class MainActivity extends AppCompatActivity implements HereCallback, MichelinCallback {
 
     private ImageButton config;
     private View bigView;
@@ -72,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        //FuelManager.getInstance(this).getFuelPrice(1,52.53087,13.44176,this);
+        RouteManager.getInstance(this).getRouteHeader(new LatLng(41.409720, 2.139490), new LatLng(42.288960, 3.278390), 0, 7.7f, 1.48f, this);
 
 
 
@@ -152,6 +144,16 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
 
     @Override
     public void pricesRecieved(PriceResponse body) {
+
+    }
+
+    @Override
+    public void onHeaderRecieved(Resposta body) {
+        System.out.println();
+    }
+
+    @Override
+    public void onHeaderFailure(Throwable throwable) {
 
     }
 

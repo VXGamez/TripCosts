@@ -6,7 +6,7 @@ import android.util.Log;
 import com.vx.dyvide.controller.restAPI.HERE.HEREInfo;
 import com.vx.dyvide.controller.restAPI.HERE.callbacks.HereCallback;
 import com.vx.dyvide.controller.restAPI.HERE.service.FuelService;
-import com.vx.dyvide.model.PriceResponse;
+import com.vx.dyvide.model.HERE.PriceResponse;
 
 import java.io.IOException;
 
