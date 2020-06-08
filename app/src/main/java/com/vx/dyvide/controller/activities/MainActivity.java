@@ -31,7 +31,11 @@ import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
 import com.vx.dyvide.model.HERE.PriceResponse;
 import com.vx.dyvide.model.Michelin.Iti;
-import com.vx.dyvide.model.Michelin.Resposta;
+import com.vx.dyvide.model.Michelin.ItiRoadsheet;
+import com.vx.dyvide.model.Michelin.RoadSheet;
+import com.vx.dyvide.model.Michelin.Summary;
+
+import java.util.ArrayList;
 
 import retrofit2.Response;
 
@@ -64,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback, Mic
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        RouteManager.getInstance(this).getRouteHeader(new LatLng(41.409720, 2.139490), new LatLng(42.288960, 3.278390), 0, 7.7f, 1.48f, this);
+        RouteManager.getInstance(this).getRouteRoadsheet(new LatLng(41.409720, 2.139490), new LatLng(42.288960, 3.278390), 0, 7.7f, 1.48f, this);
 
 
 
@@ -148,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback, Mic
     }
 
     @Override
-    public void onHeaderRecieved(Resposta body) {
+    public void onHeaderRecieved(Summary body) {
         System.out.println();
     }
 
@@ -159,6 +163,16 @@ public class MainActivity extends AppCompatActivity implements HereCallback, Mic
 
     @Override
     public void onFailure(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onRoadSheetRecieved(ArrayList<Object> parseJsonRoadsheet) {
+        System.out.println();
+    }
+
+    @Override
+    public void onRoadSheetFailure(Throwable throwable) {
 
     }
 
