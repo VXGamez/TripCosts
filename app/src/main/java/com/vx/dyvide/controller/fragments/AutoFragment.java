@@ -1,5 +1,6 @@
 package com.vx.dyvide.controller.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -28,11 +29,15 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +45,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -92,6 +98,12 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     private Marker originMarker;
     private Marker destinationMarker;
 
+    private RecyclerView tollRecycle;
+
+    private Switch tollSwitch;
+    private boolean wantsTolls;
+    private LinearLayout tolls;
+
     private ImageButton swapDestinations;
 
     private Polyline currentPolyline;
@@ -135,7 +147,23 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
 
         View view = inflater.inflate(R.layout.auto_fragment, container, false);
-
+        tolls = view.findViewById(R.id.tolls);
+        tollSwitch = view.findViewById(R.id.tollSwitch);
+        tolls.setVisibility(View.GONE);
+        tollSwitch.setVisibility(View.INVISIBLE);
+        tollSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                wantsTolls = isChecked;
+                if(isChecked){
+                    tolls.setVisibility(View.VISIBLE);
+                }else{
+                    tolls.setVisibility(View.GONE);
+                }
+            }
+        });
+        tollRecycle= view.findViewById(R.id.tollRecycle);
+        tollRecycle.setVisibility(View.GONE);
         scrollView = view.findViewById(R.id.statisticsScrollview);
         totalKM = view.findViewById(R.id.totalKM);
         swapDestinations= view.findViewById(R.id.swap);
@@ -357,13 +385,21 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
             map.animateCamera(cu);
             if(origin!=null && destination!=null){
-                //RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, 0, DB.getCurrentVehicle().getConsum(), 1.48f, this);
+                hideKeyboard(getActivity());
+                RouteManager.getInstance(this).getRouteHeader(origin, destination, getVehicleType(), DB.getCurrentVehicle().getConsum(), 1.48f, this);
                 drawRoute();
             }
         }
 
     }
 
+    private void makeRecycle(){
+
+    }
+
+    private int getVehicleType() {
+        return 0;
+    }
 
 
     public void setOriginCurrentLocation(){
@@ -490,7 +526,21 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     @Override
     public void onHeaderRecieved(Summary body) {
+        if(body.getTollCost().getCar()>0){
+            makeCustomToast("This route has tolls");
+            tollSwitch.setVisibility(View.VISIBLE);
+        }
+    }
 
+    public void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override
