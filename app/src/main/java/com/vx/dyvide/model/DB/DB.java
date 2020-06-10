@@ -24,6 +24,11 @@ public class DB {
         return ObjectBox.get().boxFor(SavedConfig.class).get(1).retrieveVehicles().size()>1;
     }
 
+    public static Vehicle getCurrentVehicle(){
+        ArrayList<Vehicle> cars = getVehicles();
+        return cars.get(ObjectBox.get().boxFor(SavedConfig.class).get(1).getSelectedVehicle());
+    }
+
     public static ArrayList<Vehicle> getVehicles(){
         ArrayList<Vehicle> cars = ObjectBox.get().boxFor(SavedConfig.class).get(1).retrieveVehicles();
         Vehicle v = cars.get(0);

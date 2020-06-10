@@ -39,7 +39,7 @@ import java.util.ArrayList;
 
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements HereCallback, MichelinCallback {
+public class MainActivity extends AppCompatActivity implements HereCallback {
 
     private ImageButton config;
     private View bigView;
@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements HereCallback, Mic
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-
-        //RouteManager.getInstance(this).getRouteRoadsheet(new LatLng(41.409720, 2.139490), new LatLng(42.288960, 3.278390), 0, 7.7f, 1.48f, this);
 
         if(!DB.hasConfig()){
             DB.createConfig();
@@ -141,6 +139,9 @@ public class MainActivity extends AppCompatActivity implements HereCallback, Mic
 
     }
 
+    public ImageButton getConfig() {
+        return config;
+    }
 
     @Override
     public void pricesRecieved(PriceResponse body) {
@@ -148,27 +149,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback, Mic
     }
 
     @Override
-    public void onHeaderRecieved(Summary body) {
-        System.out.println();
-    }
-
-    @Override
-    public void onHeaderFailure(Throwable throwable) {
-
-    }
-
-    @Override
     public void onFailure(Throwable throwable) {
-
-    }
-
-    @Override
-    public void onRoadSheetRecieved(ArrayList<Object> parseJsonRoadsheet) {
-        System.out.println();
-    }
-
-    @Override
-    public void onRoadSheetFailure(Throwable throwable) {
 
     }
 

@@ -25,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,11 +60,15 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.vx.dyvide.R;
+import com.vx.dyvide.controller.activities.MainActivity;
+import com.vx.dyvide.controller.restAPI.Michelin.callbacks.MichelinCallback;
+import com.vx.dyvide.controller.restAPI.Michelin.managers.RouteManager;
 import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
 import com.vx.dyvide.model.DB.SavedConfig;
 import com.vx.dyvide.model.HERE.directionhelpers.FetchURL;
 import com.vx.dyvide.model.HERE.directionhelpers.TaskLoadedCallback;
+import com.vx.dyvide.model.Michelin.Summary;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,7 +76,7 @@ import java.util.List;
 
 import static com.vx.dyvide.controller.fragments.ManualFragment.round;
 
-public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLoadedCallback {
+public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLoadedCallback, MichelinCallback {
 
     private GoogleMap map;
     private ScrollView scrollView;
@@ -232,6 +238,12 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                         //totalCost.setText("Total: "+ ok);
                     }else{
                         ok = "Please setup a car!";
+                        Animation anim = new AlphaAnimation(0.0f, 1.0f);
+                        anim.setDuration(50);
+                        anim.setStartOffset(20);
+                        anim.setRepeatMode(Animation.REVERSE);
+                        anim.setRepeatCount(Animation.INFINITE);
+                        ((MainActivity)getActivity()).getConfig().startAnimation(anim);
                     }
 
                 }else{
@@ -345,6 +357,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
             map.animateCamera(cu);
             if(origin!=null && destination!=null){
+                //RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, 0, DB.getCurrentVehicle().getConsum(), 1.48f, this);
                 drawRoute();
             }
         }
@@ -475,4 +488,28 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     }
 
 
+    @Override
+    public void onHeaderRecieved(Summary body) {
+
+    }
+
+    @Override
+    public void onHeaderFailure(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onFailure(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onRoadSheetRecieved(ArrayList<Object> parseJsonRoadsheet) {
+
+    }
+
+    @Override
+    public void onRoadSheetFailure(Throwable throwable) {
+
+    }
 }

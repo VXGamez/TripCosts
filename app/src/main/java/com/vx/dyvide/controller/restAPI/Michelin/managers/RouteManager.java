@@ -31,11 +31,11 @@ public class RouteManager {
     private Retrofit mainRetrofit;
     private static final String TAG = RouteManager.class.getName();
     private MichelinService michelinService;
-    private Context mContext;
+    private MichelinCallback mContext;
     private static RouteManager sPlaylistManager;
 
 
-    public static RouteManager getInstance(Context context) {
+    public static RouteManager getInstance(MichelinCallback context) {
         if (sPlaylistManager == null) {
             sPlaylistManager = new RouteManager(context);
         }
@@ -43,7 +43,7 @@ public class RouteManager {
     }
 
 
-    public RouteManager(Context context) {
+    public RouteManager(MichelinCallback context) {
         mainRetrofit = new Retrofit.Builder()
                 .baseUrl("https://secure-apir.viamichelin.com/apir/")
                 .addConverterFactory(ScalarsConverterFactory.create())
