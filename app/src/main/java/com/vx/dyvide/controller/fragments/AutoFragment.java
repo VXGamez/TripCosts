@@ -48,6 +48,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.ErrorDialogFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -71,6 +72,7 @@ import com.vx.dyvide.controller.activities.MainActivity;
 import com.vx.dyvide.controller.adapters.TollAdapter;
 import com.vx.dyvide.controller.adapters.VehicleAdapter;
 import com.vx.dyvide.controller.callbacks.TollListCallback;
+import com.vx.dyvide.controller.dialogs.ErrorDialog;
 import com.vx.dyvide.controller.restAPI.Michelin.callbacks.MichelinCallback;
 import com.vx.dyvide.controller.restAPI.Michelin.managers.RouteManager;
 import com.vx.dyvide.model.DB.DB;
@@ -106,6 +108,9 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     private RecyclerView tollRecycle;
     private TextView totalTollCostTXT;
+
+    private TextView totalTripCostTXT;
+    private float totalTripCost;
 
     private Switch tollSwitch;
     private boolean wantsTolls;
@@ -156,6 +161,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         View view = inflater.inflate(R.layout.auto_fragment, container, false);
         tolls = view.findViewById(R.id.tolls);
         tollSwitch = view.findViewById(R.id.tollSwitch);
+        totalTripCostTXT = view.findViewById(R.id.costTotalTrajetcte);
         tollRecycle = (RecyclerView) view.findViewById(R.id.tollRecycle);
         tolls.setVisibility(View.GONE);
         tollSwitch.setVisibility(View.INVISIBLE);
@@ -167,10 +173,13 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 if(isChecked){
                     tolls.setVisibility(View.VISIBLE);
                     tollRecycle.setVisibility(View.VISIBLE);
+                    totalTripCost += totalTollCost;
                 }else{
                     tolls.setVisibility(View.GONE);
                     tollRecycle.setVisibility(View.GONE);
+                    totalTripCost -= totalTollCost;
                 }
+                updateTotalTripCost();
             }
         });
         tollRecycle= view.findViewById(R.id.tollRecycle);
@@ -361,7 +370,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             ok = false;
         }else if(destination==null){
             ok = false;
-        }else if(totalPassengers.getText().equals("")){
+        }else if(totalPassengers.getText().toString().equals("") || totalPassengers.getText().toString().isEmpty()){
             ok = false;
         }else if(totalKMCalculats == 0){
             ok = false;
@@ -400,9 +409,14 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 hideKeyboard(getActivity());
                 RouteManager.getInstance(this).getRouteHeader(origin, destination, getVehicleType(), DB.getCurrentVehicle().getConsum(), 1.48f, this);
                 drawRoute();
+                updateTotalTripCost();
             }
         }
 
+    }
+
+    private void updateTotalTripCost() {
+        totalTripCostTXT.setText("Total trip cost: " + round(totalTripCost, 2) + "€");
     }
 
     private void makeRecycle(ArrayList<String> tolls){
@@ -540,6 +554,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     public void totalValues(String totalKM, int totalDistanceValue, String totalDuration, int totalDurationValue) {
         this.totalKM.setText("Total distance: " + totalKM);
         this.totalKMCalculats = totalDistanceValue;
+        totalTripCost = (metersToKM()/100)*DB.getCurrentVehicle().getConsum();
+        updateTotalTripCost();
     }
 
 
@@ -551,6 +567,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             makeCustomToast("This route has tolls");
             tollSwitch.setVisibility(View.VISIBLE);
             totalTollCostTXT.setText("Total toll cost: " + totalTollCost +"€");
+            updateTotalTripCost();
             RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, getVehicleType(), DB.getCurrentVehicle().getConsum(), 1.48f, this);
         }
     }
@@ -566,12 +583,12 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     @Override
     public void onHeaderFailure(Throwable throwable) {
-
+        ErrorDialog.getInstance(getActivity()).showErrorDialog("App failure. Please restart the app");
     }
 
     @Override
     public void onFailure(Throwable throwable) {
-
+        ErrorDialog.getInstance(getActivity()).showErrorDialog("App failure. Please restart the app");
     }
 
     @Override
@@ -590,11 +607,24 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     @Override
     public void onRoadSheetFailure(Throwable throwable) {
-
+        ErrorDialog.getInstance(getActivity()).showErrorDialog("App failure. Please restart the app");
     }
 
     @Override
     public void tollSelected(String item, boolean checked) {
-
+        String[] words = item.split(" ");
+        float cost = 0;
+        for(int i=0; i<words.length ;i++){
+            if(words[i].contains(".") && words[i+1].contains("EUR") ){
+                cost = Float.parseFloat(words[i]);
+            }
+        }
+        if(checked){
+            totalTollCost+=cost;
+        }else{
+            totalTollCost-=cost;
+        }
+        totalTollCostTXT.setText("Total toll cost: " + round(totalTollCost, 2) + "€");
     }
+
 }
