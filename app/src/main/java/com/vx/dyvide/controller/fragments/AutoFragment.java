@@ -45,6 +45,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -67,6 +68,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.vx.dyvide.R;
 import com.vx.dyvide.controller.activities.MainActivity;
+import com.vx.dyvide.controller.adapters.TollAdapter;
+import com.vx.dyvide.controller.adapters.VehicleAdapter;
+import com.vx.dyvide.controller.callbacks.TollListCallback;
 import com.vx.dyvide.controller.restAPI.Michelin.callbacks.MichelinCallback;
 import com.vx.dyvide.controller.restAPI.Michelin.managers.RouteManager;
 import com.vx.dyvide.model.DB.DB;
@@ -82,7 +86,7 @@ import java.util.List;
 
 import static com.vx.dyvide.controller.fragments.ManualFragment.round;
 
-public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLoadedCallback, MichelinCallback {
+public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLoadedCallback, MichelinCallback, TollListCallback {
 
     private GoogleMap map;
     private ScrollView scrollView;
@@ -98,7 +102,10 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     private Marker originMarker;
     private Marker destinationMarker;
 
+    private Double totalTollCost;
+
     private RecyclerView tollRecycle;
+    private TextView totalTollCostTXT;
 
     private Switch tollSwitch;
     private boolean wantsTolls;
@@ -149,16 +156,20 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         View view = inflater.inflate(R.layout.auto_fragment, container, false);
         tolls = view.findViewById(R.id.tolls);
         tollSwitch = view.findViewById(R.id.tollSwitch);
+        tollRecycle = (RecyclerView) view.findViewById(R.id.tollRecycle);
         tolls.setVisibility(View.GONE);
         tollSwitch.setVisibility(View.INVISIBLE);
+        totalTollCostTXT = view.findViewById(R.id.totalTollCost);
         tollSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 wantsTolls = isChecked;
                 if(isChecked){
                     tolls.setVisibility(View.VISIBLE);
+                    tollRecycle.setVisibility(View.VISIBLE);
                 }else{
                     tolls.setVisibility(View.GONE);
+                    tollRecycle.setVisibility(View.GONE);
                 }
             }
         });
@@ -324,18 +335,19 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         float fuelType = DB.getVehicles().get(ObjectBox.get().boxFor(SavedConfig.class).get(1).selectedVehicle).getFuel();
         if(fuelType == 0){
             //diesel
-            fuelCost = (float) 1.002;
+            fuelCost = (float) 1.008;
         }else if(fuelType == 1){
             //gasolina
-            fuelCost = (float) 1.112;
+            fuelCost = (float) 1.48;
         }else if(fuelType == 2){
             //electric
             fuelCost = -1;
         }
-        totalCost = ((consum/100)*metersToKM()*fuelCost);
-        //if(wantsTolls){
-        //    totalCost += Float.parseFloat(totalTolls.getText().toString());
-        //}
+        //(7,8*(178/100))*1,48+11,65
+        totalCost = (consum*(metersToKM()/100))*fuelCost;
+        if(wantsTolls){
+            totalCost += totalTollCost;
+        }
         return totalCost/Integer.parseInt(totalPassengers.getText().toString());
     }
 
@@ -393,8 +405,11 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     }
 
-    private void makeRecycle(){
-
+    private void makeRecycle(ArrayList<String> tolls){
+        LinearLayoutManager manager2 = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        TollAdapter adapter = new TollAdapter(getActivity(), tolls, this);
+        tollRecycle.setLayoutManager(manager2);
+        tollRecycle.setAdapter(adapter);
     }
 
     private int getVehicleType() {
@@ -432,8 +447,12 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     }
 
     private void geoLocate(boolean isOrigin){
-
-        String searchString = destinationTXT.getText().toString();
+        String searchString = "";
+        if(isOrigin){
+            searchString = originTXT.getText().toString();
+        }else{
+            searchString = destinationTXT.getText().toString();
+        }
 
         Geocoder geocoder = new Geocoder(getActivity());
         List<Address> list = new ArrayList<>();
@@ -527,16 +546,18 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     @Override
     public void onHeaderRecieved(Summary body) {
         if(body.getTollCost().getCar()>0){
+
+            totalTollCost = body.getTollCost().getCar()/100;
             makeCustomToast("This route has tolls");
             tollSwitch.setVisibility(View.VISIBLE);
+            totalTollCostTXT.setText("Total toll cost: " + totalTollCost +"€");
+            RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, getVehicleType(), DB.getCurrentVehicle().getConsum(), 1.48f, this);
         }
     }
 
     public void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
         View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
         if (view == null) {
             view = new View(activity);
         }
@@ -554,12 +575,26 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     }
 
     @Override
-    public void onRoadSheetRecieved(ArrayList<Object> parseJsonRoadsheet) {
+    public void onRoadSheetRecieved(ArrayList<Object> parse) {
+        ArrayList<String> tolls = new ArrayList<>();
 
+        for(int i=0; i<parse.size() ;i++){
+            String s = ((String)((ArrayList)parse.get(i)).get(7));
+            if(s.contains("EUR")){
+                tolls.add(((String)((ArrayList)parse.get(i)).get(7)));
+            }
+        }
+
+        makeRecycle(tolls);
     }
 
     @Override
     public void onRoadSheetFailure(Throwable throwable) {
+
+    }
+
+    @Override
+    public void tollSelected(String item, boolean checked) {
 
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:layout_height="40dp">
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:gravity="center_vertical"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:button="@drawable/checkbox_selector"
+        android:layout_alignParentLeft="true" />
+    <TextView
+        android:id="@+id/tollName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:gravity="center_vertical"
+        android:textColor="#000000"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:singleLine="true" />
+</LinearLayout>
