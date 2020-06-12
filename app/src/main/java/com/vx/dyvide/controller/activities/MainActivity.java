@@ -20,7 +20,9 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.vx.dyvide.R;
 import com.vx.dyvide.controller.fragments.AutoFragment;
 import com.vx.dyvide.controller.fragments.ManualFragment;
@@ -67,6 +69,12 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        String apiKey = getString(R.string.google_maps_key);
+
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), apiKey);
+        }
 
         if(!DB.hasConfig()){
             DB.createConfig();

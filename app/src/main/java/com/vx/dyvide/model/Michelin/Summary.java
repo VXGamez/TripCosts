@@ -35,6 +35,10 @@ public class Summary {
     @Expose
     private TollCost tollCost;
 
+    public Summary(TollCost tollCost, Double totalDist) {
+        this.tollCost = tollCost;
+        this.totalDist = totalDist;
+    }
 
     public Double getTotalDist() {
         return totalDist;

@@ -125,8 +125,15 @@ public class RouteManager {
         sb.deleteCharAt(sb.toString().length()-1);
 
         String result = sb.toString();
-        ItiRoadsheet i = gson.fromJson(result, ItiRoadsheet.class);
-        return (ArrayList<Object>) i.getRoadSheet().get(0);
+        if(result.contains("errorCode")){
+            ArrayList<Object> o = new ArrayList<>();
+            o.add("ERROR");
+            return o;
+        }else{
+            ItiRoadsheet i = gson.fromJson(result, ItiRoadsheet.class);
+            return (ArrayList<Object>) i.getRoadSheet().get(0);
+        }
+
 
     }
 
@@ -139,8 +146,13 @@ public class RouteManager {
         sb.deleteCharAt(sb.toString().length()-1);
 
         String result = sb.toString();
-        Iti h = gson.fromJson(result, Iti.class);
-        ArrayList<Summary> r = (ArrayList<Summary>) h.getHeader().getSummaries();
-        return r.get(0);
+        if(result.contains("errorCode")){
+            return new Summary(null, -.1);
+        }else{
+            Iti h = gson.fromJson(result, Iti.class);
+            ArrayList<Summary> r = (ArrayList<Summary>) h.getHeader().getSummaries();
+            return r.get(0);
+        }
+
     }
 }

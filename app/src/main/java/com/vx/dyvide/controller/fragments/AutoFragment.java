@@ -1,7 +1,9 @@
 package com.vx.dyvide.controller.fragments;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -26,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
@@ -49,6 +52,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.ErrorDialogFragment;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -67,6 +71,14 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.vx.dyvide.R;
 import com.vx.dyvide.controller.activities.MainActivity;
 import com.vx.dyvide.controller.adapters.TollAdapter;
@@ -84,8 +96,11 @@ import com.vx.dyvide.model.Michelin.Summary;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static com.vx.dyvide.controller.fragments.ManualFragment.round;
 
 public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLoadedCallback, MichelinCallback, TollListCallback {
@@ -96,11 +111,16 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     private FusedLocationProviderClient fusedLocationClient;
     private LatLng origin;
     private LatLng destination;
-    private EditText originTXT;
+
+    private AutocompleteSupportFragment autocompleteOrigin;
+    private AutocompleteSupportFragment autocompleteDestination;
+    private ImageButton clearButtonOrigin;
+    private ImageButton clearButtonDestination;
+
+
     private EditText totalPassengers;
     private TextView totalKM;
     private int totalKMCalculats=0;
-    private EditText destinationTXT;
     private Marker originMarker;
     private Marker destinationMarker;
 
@@ -120,6 +140,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     private Polyline currentPolyline;
     private Button calculate;
+
 
     private void swapDestinations(){
         LatLng tmp = destination;
@@ -153,12 +174,138 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         return bitmap;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
 
         View view = inflater.inflate(R.layout.auto_fragment, container, false);
+
+        autocompleteOrigin = (AutocompleteSupportFragment) this.getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        autocompleteOrigin.setPlaceFields(Arrays.asList(Place.Field.ID,
+                Place.Field.NAME,Place.Field.LAT_LNG));
+        View fView = autocompleteOrigin.getView();
+        EditText etTextInput = fView.findViewById(R.id.places_autocomplete_search_input);
+        etTextInput.setTextColor(Color.WHITE);
+        etTextInput.setHint("Origin");
+        etTextInput.setBackgroundResource(R.drawable.textfield);
+        etTextInput.setHintTextColor(Color.WHITE);
+        etTextInput.setTextSize(12.5f);
+
+
+        fView.findViewById(R.id.places_autocomplete_search_button).setVisibility(View.GONE);
+        ImageButton clearOrigin= fView.findViewById(R.id.places_autocomplete_clear_button);
+        clearOrigin.setTag(clearOrigin.getVisibility());
+        clearOrigin.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if(clearOrigin.getVisibility()==View.VISIBLE){
+                    clearButtonOrigin.setVisibility(View.VISIBLE);
+                }
+                clearOrigin.setVisibility(View.GONE);
+            }
+        });
+
+        clearButtonOrigin = view.findViewById(R.id.clearOrigin);
+        clearButtonOrigin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etTextInput.setText("");
+                if(currentPolyline!=null){
+                    currentPolyline.remove();
+                    currentPolyline=null;
+                }
+                originMarker.remove();
+                origin = null;
+                clearButtonOrigin.setVisibility(View.GONE);
+            }
+        });
+
+
+        autocompleteOrigin.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                if(originMarker!=null){
+                    originMarker.remove();
+                    originMarker = null;
+                }
+                origin = place.getLatLng();
+                originMarker = map.addMarker(new MarkerOptions().position(origin).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
+                updateMapZoom();
+            }
+
+            @Override
+            public void onError(Status status) {
+            }
+        });
+
+
+        autocompleteDestination = (AutocompleteSupportFragment) this.getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment_destination);
+
+        autocompleteDestination.setPlaceFields(Arrays.asList(Place.Field.ID,
+                Place.Field.NAME,Place.Field.LAT_LNG));
+        View fViewD = autocompleteDestination.getView();
+        EditText etTextInputD = fViewD.findViewById(R.id.places_autocomplete_search_input);
+        etTextInputD.setTextColor(Color.WHITE);
+        etTextInputD.setHint("Destination");
+        etTextInputD.setBackgroundResource(R.drawable.textfield);
+        etTextInputD.setHintTextColor(Color.WHITE);
+        etTextInputD.setTextSize(12.5f);
+
+
+        fViewD.findViewById(R.id.places_autocomplete_search_button).setVisibility(View.GONE);
+        ImageButton clearOriginD = fViewD.findViewById(R.id.places_autocomplete_clear_button);
+        clearOriginD.setTag(clearOriginD.getVisibility());
+        clearOriginD.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if(clearOriginD.getVisibility()==View.VISIBLE){
+                    clearButtonDestination.setVisibility(View.VISIBLE);
+                }
+                clearOriginD.setVisibility(View.GONE);
+            }
+        });
+
+        clearButtonDestination = view.findViewById(R.id.clearDestination);
+        clearButtonDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etTextInputD.setText("");
+                if(currentPolyline!=null){
+                    currentPolyline.remove();
+                    currentPolyline=null;
+                }
+                destinationMarker.remove();
+                destination = null;
+                clearButtonDestination.setVisibility(View.GONE);
+            }
+        });
+
+
+        autocompleteDestination.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                if(destinationMarker!=null){
+                    destinationMarker.remove();
+                    destinationMarker = null;
+                }
+                destination = place.getLatLng();
+                destinationMarker = map.addMarker(new MarkerOptions().position(destination).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_dpin))));
+                updateMapZoom();
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.i("IHH", "An error occurred: " + status);
+            }
+        });
+
+
+
+
+
         tolls = view.findViewById(R.id.tolls);
         tollSwitch = view.findViewById(R.id.tollSwitch);
         totalTripCostTXT = view.findViewById(R.id.costTotalTrajetcte);
@@ -194,9 +341,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                     makeCustomToast("Please setup origin or destination first");
                 }else{
                     swapDestinations();
-                    String tmpString = destinationTXT.getText().toString();
-                    destinationTXT.setText(originTXT.getText().toString());
-                    originTXT.setText(tmpString);
                 }
             }
         });
@@ -204,62 +348,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         totalKM.setText("Total distance: 0 km");
         totalPassengers = view.findViewById(R.id.totalPassengers);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        originTXT= view.findViewById(R.id.originTXT);
-        originTXT.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(destination==null){
-                    map.clear();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        originTXT.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                    geoLocate(true);
-                }
-                return false;
-            }
-        });
-        destinationTXT= view.findViewById(R.id.destinationTXT);
-        destinationTXT.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                    geoLocate(false);
-                }
-                return false;
-            }
-        });
-        destinationTXT.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(origin==null){
-                    map.clear();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
 
 
         myLocation = view.findViewById(R.id.myLocation);
@@ -267,7 +355,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             @Override
             public void onClick(View v) {
                 setOriginCurrentLocation();
-                originTXT.setText("My Location");
                 updateMapZoom();
             }
         });
@@ -282,8 +369,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                     if(DB.hasCars()){
                         float total = calculateTotalCost();
                         ok = round(total, 2) + "€ x Pers.";
-                        //totalCost.setVisibility(View.VISIBLE);
-                        //totalCost.setText("Total: "+ ok);
                     }else{
                         ok = "Please setup a car!";
                         Animation anim = new AlphaAnimation(0.0f, 1.0f);
@@ -293,7 +378,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                         anim.setRepeatCount(Animation.INFINITE);
                         ((MainActivity)getActivity()).getConfig().startAnimation(anim);
                     }
-
                 }else{
                     ok = "Non-valid values. Please fill again";
                 }
@@ -336,6 +420,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
         return view;
     }
+
 
     private float calculateTotalCost() {
         float totalCost;
@@ -460,38 +545,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         }
     }
 
-    private void geoLocate(boolean isOrigin){
-        String searchString = "";
-        if(isOrigin){
-            searchString = originTXT.getText().toString();
-        }else{
-            searchString = destinationTXT.getText().toString();
-        }
-
-        Geocoder geocoder = new Geocoder(getActivity());
-        List<Address> list = new ArrayList<>();
-        try{
-            list = geocoder.getFromLocationName(searchString, 1);
-        }catch (IOException e){
-            Log.e("Location", "geoLocate: IOException: " + e.getMessage() );
-        }
-
-        if(list.size() > 0){
-            Address address = list.get(0);
-            LatLng loc = new LatLng(address.getLatitude(), address.getLongitude());
-
-            if(isOrigin){
-                origin = loc;
-                originMarker = map.addMarker(new MarkerOptions().position(origin).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
-            }else{
-                destination = loc;
-                destinationMarker = map.addMarker(new MarkerOptions().position(destination).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_dpin))));
-            }
-
-
-            updateMapZoom();
-        }
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -561,15 +614,24 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     @Override
     public void onHeaderRecieved(Summary body) {
-        if(body.getTollCost().getCar()>0){
-
-            totalTollCost = body.getTollCost().getCar()/100;
-            makeCustomToast("This route has tolls");
-            tollSwitch.setVisibility(View.VISIBLE);
-            totalTollCostTXT.setText("Total toll cost: " + totalTollCost +"€");
-            updateTotalTripCost();
-            RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, getVehicleType(), DB.getCurrentVehicle().getConsum(), 1.48f, this);
+        if(body.getTollCost()==null && body.getTotalDist()==-.1){
+            makeCustomToast("No route for these coordinates.");
+            map.clear();
+            autocompleteOrigin.setText("");
+            autocompleteDestination.setText("");
+            clearButtonOrigin.setVisibility(View.GONE);
+            clearButtonDestination.setVisibility(View.GONE);
+        }else{
+            if(body.getTollCost().getCar()>0){
+                totalTollCost = body.getTollCost().getCar()/100;
+                makeCustomToast("This route has tolls");
+                tollSwitch.setVisibility(View.VISIBLE);
+                totalTollCostTXT.setText("Total toll cost: " + totalTollCost +"€");
+                updateTotalTripCost();
+                RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, getVehicleType(), DB.getCurrentVehicle().getConsum(), 1.48f, this);
+            }
         }
+
     }
 
     public void hideKeyboard(Activity activity) {
@@ -595,14 +657,25 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     public void onRoadSheetRecieved(ArrayList<Object> parse) {
         ArrayList<String> tolls = new ArrayList<>();
 
-        for(int i=0; i<parse.size() ;i++){
-            String s = ((String)((ArrayList)parse.get(i)).get(7));
-            if(s.contains("EUR")){
-                tolls.add(((String)((ArrayList)parse.get(i)).get(7)));
+        if(parse.get(0).equals("ERROR")){
+            makeCustomToast("No route for these coordinates.");
+            map.clear();
+            autocompleteOrigin.setText("");
+            autocompleteDestination.setText("");
+            clearButtonOrigin.setVisibility(View.GONE);
+            clearButtonDestination.setVisibility(View.GONE);
+        }else{
+
+            for(int i=0; i<parse.size() ;i++){
+                String s = ((String)((ArrayList)parse.get(i)).get(7));
+                if(s.contains("EUR")){
+                    tolls.add(((String)((ArrayList)parse.get(i)).get(7)));
+                }
             }
+
+            makeRecycle(tolls);
         }
 
-        makeRecycle(tolls);
     }
 
     @Override

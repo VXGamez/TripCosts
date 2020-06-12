@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,6 +52,13 @@ public class TollAdapter extends RecyclerView.Adapter<TollAdapter.ViewHolder> {
                 mCallback.tollSelected(peajes.get(position), isChecked);
             }
         });
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.checkBox.setChecked(!holder.checkBox.isChecked());
+                mCallback.tollSelected(peajes.get(position), holder.checkBox.isChecked());
+            }
+        });
     }
 
     @Override
@@ -60,6 +68,7 @@ public class TollAdapter extends RecyclerView.Adapter<TollAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        LinearLayout layout;
         CheckBox checkBox;
         TextView tollName;
 
@@ -67,6 +76,7 @@ public class TollAdapter extends RecyclerView.Adapter<TollAdapter.ViewHolder> {
             super(itemView);
             checkBox = itemView.findViewById(R.id.checkbox);
             tollName= itemView.findViewById(R.id.tollName);
+            layout = itemView.findViewById(R.id.layout);
         }
     }
 }
