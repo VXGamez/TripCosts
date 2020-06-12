@@ -32,6 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".controller.onboarding.OnboardingActivity"/>
         <activity android:name=".controller.activities.SettingsActivity"/>
         <service android:name=".controller.service.ConnectivityService"/>
 

@@ -35,6 +35,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.vx.dyvide.R;
 import com.vx.dyvide.controller.fragments.AutoFragment;
 import com.vx.dyvide.controller.fragments.ManualFragment;
+import com.vx.dyvide.controller.onboarding.OnboardingActivity;
 import com.vx.dyvide.controller.restAPI.HERE.callbacks.HereCallback;
 import com.vx.dyvide.controller.restAPI.Michelin.callbacks.MichelinCallback;
 import com.vx.dyvide.controller.restAPI.Michelin.managers.RouteManager;
@@ -64,6 +65,15 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     private Fragment menu;
     private AdView mAdView;
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(connectionLost);
+        unregisterReceiver(connectionRegained);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,10 +89,14 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
 
 
         mAdView = findViewById(R.id.adView);
-
+        Intent intento = new Intent(this, OnboardingActivity.class);
+        startActivity(intento);
+        overridePendingTransition(R.anim.nothing, R.anim.nothing);
         if(!DB.hasConfig()){
             DB.createConfig();
+
         }
+
         menu = getSupportFragmentManager().findFragmentById(R.id.user_menu);
 
         config = findViewById(R.id.settings);

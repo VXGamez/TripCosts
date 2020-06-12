@@ -5,4 +5,12 @@
     <color name="colorAccent">#FFFFFF</color>
     <color name="color_pressed">#F2EFEF</color>
     <color name="color_released">#8ED61D</color>
+
+    <color name="blackNavy">#10101C</color>
+    <color name="next_1">#FAFAFA</color>
+    <color name="next_2">#FAFAFA</color>
+    <color name="next_3">#FAFAFA</color>
+    <color name="next_4">#FAFAFA</color>
+    <color name="dark_navy">#0E2132</color>
+
 </resources>

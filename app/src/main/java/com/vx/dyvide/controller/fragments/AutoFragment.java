@@ -619,11 +619,47 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         } catch (Resources.NotFoundException e) {
 
         }
+
+
+
         map.getUiSettings().setZoomControlsEnabled(false);
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setScrollGesturesEnabled(true);
         map.resetMinMaxZoomPreference();
-        map.setMaxZoomPreference(16.0f);
+        zoomToMyLocation();
+    }
+
+    private void zoomToMyLocation(){
+        if(map!=null){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                checkPermission();
+            }
+            fusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                    int padding = 200;
+                    map.setMaxZoomPreference(3.0f);
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                    builder.include(loc);
+                    LatLngBounds bounds = builder.build();
+                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                    map.animateCamera(cu);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+            map.setMaxZoomPreference(16.0f);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        zoomToMyLocation();
     }
 
     private void drawRoute() {

@@ -8,4 +8,9 @@
         <item>Electric</item>
     </string-array>
 
+    <string name="demo_content">Lorem ipsum dolor sit amet, consectetur\n adipiscing elit. Vivamus sodales faucibus\n dapibus. Etiam mattis leo quis laoreet dictum.</string>
+    <string name="demo_title">Lorem Ipsum</string>
+    <string name="next">Next</string>
+    <string name="toll_content">"If your trip includes tolls, they can be added to the cost. You can always change this setting however you like"</string>
+
 </resources>
