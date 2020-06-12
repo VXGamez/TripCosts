@@ -82,14 +82,7 @@ public class ManualFragment  extends Fragment {
                 }else{
                     ok = "Non-valid values. Please fill again";
                 }
-                Toast toast = Toast.makeText(getActivity(), ok, Toast.LENGTH_LONG);
-                View view = toast.getView();
-                view.getBackground().setColorFilter(Color.parseColor("#7ED31F"), PorterDuff.Mode.SRC_IN);
-                TextView text = view.findViewById(android.R.id.message);
-                text.setTextColor(Color.WHITE);
-                text.setTypeface(text.getTypeface(), Typeface.BOLD);
-                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 570);
-                toast.show();
+                DB.makeCustomToast(getActivity(), ok);
             }
         });
 

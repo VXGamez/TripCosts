@@ -1,5 +1,16 @@
 package com.vx.dyvide.model.DB;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.vx.dyvide.model.Vehicle;
 
 import java.util.ArrayList;
@@ -22,6 +33,24 @@ public class DB {
 
     public static boolean hasCars(){
         return ObjectBox.get().boxFor(SavedConfig.class).get(1).retrieveVehicles().size()>1;
+    }
+
+    public static void makeCustomToast(Context c, String ok){
+        Toast toast = Toast.makeText(c, ok, Toast.LENGTH_SHORT);
+        View view = toast.getView();
+        view.getBackground().setColorFilter(Color.parseColor("#7ED31F"), PorterDuff.Mode.SRC_IN);
+        TextView text = view.findViewById(android.R.id.message);
+        text.setTextColor(Color.WHITE);
+        text.setTypeface(text.getTypeface(), Typeface.BOLD);
+        toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 570);
+        toast.show();
+    }
+
+    public static boolean noInternet(Context c){
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return !(activeNetworkInfo != null && activeNetworkInfo.isConnected());
     }
 
     public static Vehicle getCurrentVehicle(){

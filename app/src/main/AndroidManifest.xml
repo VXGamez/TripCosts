@@ -33,6 +33,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".controller.activities.SettingsActivity"/>
+        <service android:name=".controller.service.ConnectivityService"/>
+
     </application>
 
 </manifest>

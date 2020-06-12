@@ -107,7 +107,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     private GoogleMap map;
     private ScrollView scrollView;
-    private ImageButton myLocation;
+    private ImageButton myLocationOrigin;
+    private ImageButton myLocationDestination;
     private FusedLocationProviderClient fusedLocationClient;
     private LatLng origin;
     private LatLng destination;
@@ -146,21 +147,39 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         LatLng tmp = destination;
         destination = origin;
         origin = tmp;
+        EditText textDest = autocompleteDestination.getView().findViewById(R.id.places_autocomplete_search_input);
+        EditText textOrig = autocompleteOrigin.getView().findViewById(R.id.places_autocomplete_search_input);
+        String sTmp = textDest.getText().toString();
+        textDest.setText(textOrig.getText().toString());
+        textOrig.setText(sTmp);
+        if(!textDest.getText().toString().equals("")  &&  !textDest.getText().toString().isEmpty()){
+            clearButtonDestination.setVisibility(View.VISIBLE);
+        }else{
+            clearButtonDestination.setVisibility(View.GONE);
+        }
+
+        if(!textOrig.getText().toString().equals("")  &&  !textOrig.getText().toString().isEmpty()){
+            clearButtonOrigin.setVisibility(View.VISIBLE);
+        }else{
+            clearButtonOrigin.setVisibility(View.GONE);
+        }
         repaintMap();
     }
 
     private void repaintMap() {
 
-        if(origin!=null){
-            destinationMarker.remove();
-            destinationMarker = null;
-            originMarker = map.addMarker(new MarkerOptions().position(origin).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
-        }
-        if(destination!=null){
+        if(originMarker!=null){
             originMarker.remove();
             originMarker = null;
-            destinationMarker = map.addMarker(new MarkerOptions().position(destination).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_dpin))));
         }
+        if(destinationMarker!=null){
+            destinationMarker.remove();
+            destinationMarker = null;
+        }
+
+        originMarker = map.addMarker(new MarkerOptions().position(origin).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
+        destinationMarker = map.addMarker(new MarkerOptions().position(destination).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_dpin))));
+
     }
 
     private Bitmap getBitmap(int drawableRes) {
@@ -338,7 +357,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             @Override
             public void onClick(View v) {
                 if(destination==null && origin ==null) {
-                    makeCustomToast("Please setup origin or destination first");
+                    DB.makeCustomToast(getActivity(),"Please setup origin or destination first");
                 }else{
                     swapDestinations();
                 }
@@ -350,12 +369,18 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
 
-        myLocation = view.findViewById(R.id.myLocation);
-        myLocation.setOnClickListener(new View.OnClickListener() {
+        myLocationOrigin = view.findViewById(R.id.myLocationOrigin);
+        myLocationOrigin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setOriginCurrentLocation();
-                updateMapZoom();
+            }
+        });
+        myLocationDestination = view.findViewById(R.id.myLocationDestination);
+        myLocationDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDestinationCurrentLocation();
             }
         });
 
@@ -381,7 +406,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 }else{
                     ok = "Non-valid values. Please fill again";
                 }
-                makeCustomToast(ok);
+                DB.makeCustomToast(getActivity(),ok);
             }
         });
 
@@ -419,6 +444,32 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         });
 
         return view;
+    }
+
+    private void setDestinationCurrentLocation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermission();
+        }
+        fusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                if(origin!=null && (location.getLatitude() == origin.latitude && location.getLongitude() == origin.longitude) ){
+                    DB.makeCustomToast(getActivity(),"Origin and destination cannot be the same");
+                }else{
+                    destination = loc;
+                    autocompleteDestination.setText("My Location");
+                    destinationMarker = map.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_dpin))));
+                    updateMapZoom();
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
 
@@ -524,9 +575,14 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             @Override
             public void onSuccess(Location location) {
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-                origin = loc;
-                originMarker = map.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
-                updateMapZoom();
+                if(destination!=null && (location.getLatitude() == destination.latitude && location.getLongitude() == destination.longitude) ){
+                    DB.makeCustomToast(getActivity(),"Origin and destination cannot be the same");
+                }else{
+                    origin = loc;
+                    autocompleteOrigin.setText("My Location");
+                    originMarker = map.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
+                    updateMapZoom();
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -571,7 +627,11 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     }
 
     private void drawRoute() {
-        new FetchURL(this).execute(getUrl(origin, destination, "driving"), "driving");
+        if(origin == destination){
+            DB.makeCustomToast(getActivity(),"Origin and destination cannot be the same");
+        }else{
+            new FetchURL(this).execute(getUrl(origin, destination, "driving"), "driving");
+        }
     }
 
 
@@ -585,16 +645,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         return url;
     }
 
-    private void makeCustomToast(String ok){
-        Toast toast = Toast.makeText(getActivity(), ok, Toast.LENGTH_SHORT);
-        View view = toast.getView();
-        view.getBackground().setColorFilter(Color.parseColor("#7ED31F"), PorterDuff.Mode.SRC_IN);
-        TextView text = view.findViewById(android.R.id.message);
-        text.setTextColor(Color.WHITE);
-        text.setTypeface(text.getTypeface(), Typeface.BOLD);
-        toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 570);
-        toast.show();
-    }
+   
 
     @Override
     public void onTaskDone(Object... values) {
@@ -615,7 +666,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     @Override
     public void onHeaderRecieved(Summary body) {
         if(body.getTollCost()==null && body.getTotalDist()==-.1){
-            makeCustomToast("No route for these coordinates.");
+            DB.makeCustomToast(getActivity(),"No route for these coordinates.");
             map.clear();
             autocompleteOrigin.setText("");
             autocompleteDestination.setText("");
@@ -624,7 +675,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         }else{
             if(body.getTollCost().getCar()>0){
                 totalTollCost = body.getTollCost().getCar()/100;
-                makeCustomToast("This route has tolls");
+                DB.makeCustomToast(getActivity(),"This route has tolls");
                 tollSwitch.setVisibility(View.VISIBLE);
                 totalTollCostTXT.setText("Total toll cost: " + totalTollCost +"€");
                 updateTotalTripCost();
@@ -658,7 +709,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         ArrayList<String> tolls = new ArrayList<>();
 
         if(parse.get(0).equals("ERROR")){
-            makeCustomToast("No route for these coordinates.");
+            DB.makeCustomToast(getActivity(),"No route for these coordinates.");
             map.clear();
             autocompleteOrigin.setText("");
             autocompleteDestination.setText("");

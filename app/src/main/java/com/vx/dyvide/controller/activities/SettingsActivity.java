@@ -87,7 +87,12 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         fuelType.setOnValueChangedListener(new ToggleButton.OnValueChangedListener() {
             @Override
             public void onValueChanged(int value) {
-                selectedFuel = value;
+                if(value==2){
+                    fuelType.setValue(-1);
+                    DB.makeCustomToast(SettingsActivity.this, "Not available yet");
+                }else{
+                    selectedFuel = value;
+                }
             }
         });
         fuelType.setColorRes(R.color.color_pressed, R.color.color_released);

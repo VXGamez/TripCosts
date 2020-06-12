@@ -4,16 +4,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -29,6 +38,7 @@ import com.vx.dyvide.controller.fragments.ManualFragment;
 import com.vx.dyvide.controller.restAPI.HERE.callbacks.HereCallback;
 import com.vx.dyvide.controller.restAPI.Michelin.callbacks.MichelinCallback;
 import com.vx.dyvide.controller.restAPI.Michelin.managers.RouteManager;
+import com.vx.dyvide.controller.service.ConnectivityService;
 import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
 import com.vx.dyvide.model.HERE.PriceResponse;
@@ -49,7 +59,9 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     private TextView manual;
     private SpringAnimation springAnimation;
     private int width;
-
+    private boolean inicialized = false;
+    private boolean hasInternet = true;
+    private Fragment menu;
     private AdView mAdView;
 
     @Override
@@ -60,25 +72,18 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         getScreenSize();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
+        Intent intent = new Intent(this, ConnectivityService.class);
+        intent.putExtra(ConnectivityService.TAG_INTERVAL, 3);
+        startService(intent);
 
-            }
-        });
+
+
         mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
-        String apiKey = getString(R.string.google_maps_key);
-
-        if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), apiKey);
-        }
 
         if(!DB.hasConfig()){
             DB.createConfig();
         }
+        menu = getSupportFragmentManager().findFragmentById(R.id.user_menu);
 
         config = findViewById(R.id.settings);
         config.setOnClickListener(new View.OnClickListener() {
@@ -90,8 +95,10 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
             }
         });
 
+        registerConnectionRegained();
+        registerConnectionLost();
 
-       bigView = (View) findViewById(R.id.view_big_bar);
+        bigView = (View) findViewById(R.id.view_big_bar);
 
         SpringForce springForce = new SpringForce(0).setDampingRatio(SpringForce.DAMPING_RATIO_LOW_BOUNCY)
                 .setStiffness(SpringForce.STIFFNESS_MEDIUM);
@@ -103,7 +110,11 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         auto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initAuto();
+                if(hasInternet){
+                    initAuto();
+                }else{
+                    DB.makeCustomToast(MainActivity.this,"Not available without internet");
+                }
             }
         });
 
@@ -114,9 +125,62 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
                 initManual();
             }
         });
-
+        if(DB.noInternet(this)){
+            hasInternet = false;
+            initManual();
+        }else{
+            inicialitzarInternete();
+            inicialized = true;
+        }
     }
 
+    private void inicialitzarInternete() {
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        String apiKey = getString(R.string.google_maps_key);
+
+
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), apiKey);
+        }
+    }
+
+    private void registerConnectionRegained() {
+        IntentFilter filter = new IntentFilter(ConnectivityService.Broadcast_CONNECTION_REGAINED);
+        registerReceiver(connectionRegained, filter);
+    }
+
+    private void registerConnectionLost() {
+        IntentFilter filter = new IntentFilter(ConnectivityService.Broadcast_CONNECTION_LOST);
+        registerReceiver(connectionLost, filter);
+    }
+
+
+    private BroadcastReceiver connectionRegained = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            hasInternet = true;
+            if(!inicialized){
+                inicialitzarInternete();
+            }
+        }
+    };
+
+
+    private BroadcastReceiver connectionLost = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            hasInternet = false;
+            initManual();
+        }
+    };
 
 
     void getScreenSize(){
