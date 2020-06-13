@@ -35,6 +35,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.vx.dyvide.R;
 import com.vx.dyvide.controller.fragments.AutoFragment;
 import com.vx.dyvide.controller.fragments.ManualFragment;
+import com.vx.dyvide.controller.fragments.SupportFragment;
 import com.vx.dyvide.controller.onboarding.OnboardingActivity;
 import com.vx.dyvide.controller.restAPI.HERE.callbacks.HereCallback;
 import com.vx.dyvide.controller.restAPI.Michelin.callbacks.MichelinCallback;
@@ -58,10 +59,12 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     private View bigView;
     private TextView auto;
     private TextView manual;
+    private TextView support;
     private SpringAnimation springAnimation;
     private int width;
     private boolean inicialized = false;
     private boolean hasInternet = true;
+    private boolean needsOnboard = true;
     private Fragment menu;
     private AdView mAdView;
 
@@ -73,6 +76,19 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         unregisterReceiver(connectionRegained);
     }
 
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 131) {
+            if (resultCode == RESULT_OK) {
+                String onboard = data.getStringExtra("onboard");
+                if(onboard.equals("TRUE")){
+                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
+                }
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,15 +102,20 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         intent.putExtra(ConnectivityService.TAG_INTERVAL, 3);
         startService(intent);
 
-
-
         mAdView = findViewById(R.id.adView);
-        Intent intento = new Intent(this, OnboardingActivity.class);
-        startActivity(intento);
-        overridePendingTransition(R.anim.nothing, R.anim.nothing);
+
         if(!DB.hasConfig()){
             DB.createConfig();
-
+            Intent intento = new Intent(this, OnboardingActivity.class);
+            startActivityForResult(intento, 131);
+            overridePendingTransition(R.anim.nothing, R.anim.nothing);
+        }else{
+            if(!DB.hasCars()){
+                Intent intent2 = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent2);
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
+                DB.makeCustomToast(this, "Please setup a vehicle");
+            }
         }
 
         menu = getSupportFragmentManager().findFragmentById(R.id.user_menu);
@@ -108,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
                 overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
             }
         });
+
+
 
         registerConnectionRegained();
         registerConnectionLost();
@@ -139,6 +162,14 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
                 initManual();
             }
         });
+        support = (TextView) findViewById(R.id.support);
+        support.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initSupport();
+            }
+        });
+
         if(DB.noInternet(this)){
             hasInternet = false;
             initManual();
@@ -205,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     }
 
     private void initManual() {
-        springAnimation.animateToFinalPosition(130+this.width/2);
+        springAnimation.animateToFinalPosition(20+(this.width/3));
         ManualFragment manualFragment = new ManualFragment();
 
         FragmentManager manager = getSupportFragmentManager();
@@ -214,8 +245,18 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
                 .commit();
     }
 
+    private void initSupport() {
+        springAnimation.animateToFinalPosition(20+(this.width/3)*2);
+        SupportFragment supportFragment = new SupportFragment();
+
+        FragmentManager manager = getSupportFragmentManager();
+        manager.beginTransaction()
+                .replace(R.id.typeLayout, supportFragment, supportFragment.getTag())
+                .commit();
+    }
+
     void initAuto(){
-        springAnimation.animateToFinalPosition(130);
+        springAnimation.animateToFinalPosition(20);
         AutoFragment autoFragment = new AutoFragment();
 
         FragmentManager manager = getSupportFragmentManager();

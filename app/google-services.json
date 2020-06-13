@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "105635554774",
+    "firebase_url": "https://dyvide-29d40.firebaseio.com",
+    "project_id": "dyvide-29d40",
+    "storage_bucket": "dyvide-29d40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105635554774:android:409f77c202b8e68db57077",
+        "android_client_info": {
+          "package_name": "com.vx.dyvide"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "105635554774-fmenuu7l7vd77m6j3mmpjb7nvmhe2cvn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvgmqX50EYzJDG9NjY2besGNpp_IblLsY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "105635554774-fmenuu7l7vd77m6j3mmpjb7nvmhe2cvn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

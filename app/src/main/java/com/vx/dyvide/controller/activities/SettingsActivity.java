@@ -98,15 +98,38 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         fuelType.setColorRes(R.color.color_pressed, R.color.color_released);
         carNameFuel = findViewById(R.id.carNameFuel);
         editName = findViewById(R.id.editCarName);
+        editName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                name.setText(editName.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         editConsu = findViewById(R.id.editCarConsu);
         update = findViewById(R.id.update);
         update.setEnabled(true);
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
                 vehiculoh.get(currentVehicle).setName(editName.getText().toString());
                 vehiculoh.get(currentVehicle).setConsum(Float.parseFloat(editConsu.getText().toString()));
-                ObjectBox.get().boxFor(SavedConfig.class).get(1).saveVehicles(vehiculoh);
+                Vehicle add = vehiculoh.get(vehiculoh.size()-1);
+                vehiculoh.remove(add);
+                vehiculoh.add(0, add);
+                c.saveVehicles(vehiculoh);
+                ObjectBox.get().boxFor(SavedConfig.class).put(c);
+                reload();
+                DB.makeCustomToast(SettingsActivity.this, "Vehicle updated");
             }
         });
 
@@ -189,10 +212,15 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         atras.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
-                c.setSelectedVehicle(currentVehicle);
-                ObjectBox.get().boxFor(SavedConfig.class).put(c);
-                finish();
+                if(DB.hasCars()){
+                    SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
+                    c.setSelectedVehicle(currentVehicle);
+                    ObjectBox.get().boxFor(SavedConfig.class).put(c);
+                    finish();
+                }else{
+                    DB.makeCustomToast(SettingsActivity.this, "Please setup a vehicle");
+                }
+
             }
         });
         vehiculoh = DB.getVehicles();
@@ -318,6 +346,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         carInfo.setVisibility(View.VISIBLE);
         carNameFuel.setText(new StringBuilder().append(fuelType(vehicle)).append(" ").append(vehicleType(vehicle)).toString());
         editName.setText(vehicle.getName());
+        name.setText(vehicle.getName());
         editConsu.setText(String.format("%s", vehicle.getConsum()));
     }
 

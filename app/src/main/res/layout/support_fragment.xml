@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+
+    <ScrollView
+        android:id="@+id/statisticsScrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="130dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/supportTXT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:gravity="start"
+                android:layout_marginLeft="15dp"
+                android:clickable="true"
+                android:textColor="#000000"
+                android:fontFamily="@font/montserrat_semibold"
+                android:textSize="25dp"
+                android:text="Support"/>
+
+
+            <TextView
+                android:id="@+id/descriptionSupport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="15dp"
+                android:gravity="start"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="15dp"
+                android:clickable="true"
+                android:textColor="#000000"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="15dp"
+                android:text="@string/support"/>
+
+
+
+            <TextView
+                android:id="@+id/more"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="15dp"
+                android:clickable="true"
+                android:textColor="#000000"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="15dp"
+                android:text="@string/supportMore"/>
+
+            <TextView
+                android:id="@+id/functionalities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="15dp"
+                android:gravity="start"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="15dp"
+                android:clickable="true"
+                android:textColor="#000000"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="15dp"
+                android:text="@string/functionalities"/>
+
+            <Button
+                android:id="@+id/supportForm"
+                android:layout_width="140dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center_horizontal"
+                android:text="CONTACT"
+                android:fontFamily="@font/montserrat_semibold"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="20dp"
+                android:background="@drawable/roundedxml"
+                android:textColor="#FFFF"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#8ED61D"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_alignParentTop="true"
+                />
+
+            <TextView
+                android:id="@+id/FAQtxt"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:layout_marginLeft="15dp"
+                android:clickable="true"
+                android:textColor="#000000"
+                android:fontFamily="@font/montserrat_semibold"
+                android:textSize="25dp"
+                android:text="FAQ"/>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/faqRecycle"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

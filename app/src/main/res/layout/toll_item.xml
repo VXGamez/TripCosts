@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dp"
         android:gravity="center_vertical"
+        android:fontFamily="@font/montserrat_regular"
         android:textColor="#000000"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:singleLine="true" />

@@ -47,6 +47,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -85,6 +86,7 @@ import com.vx.dyvide.controller.adapters.TollAdapter;
 import com.vx.dyvide.controller.adapters.VehicleAdapter;
 import com.vx.dyvide.controller.callbacks.TollListCallback;
 import com.vx.dyvide.controller.dialogs.ErrorDialog;
+import com.vx.dyvide.controller.dialogs.PriceDialog;
 import com.vx.dyvide.controller.restAPI.Michelin.callbacks.MichelinCallback;
 import com.vx.dyvide.controller.restAPI.Michelin.managers.RouteManager;
 import com.vx.dyvide.model.DB.DB;
@@ -212,6 +214,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         etTextInput.setBackgroundResource(R.drawable.textfield);
         etTextInput.setHintTextColor(Color.WHITE);
         etTextInput.setTextSize(12.5f);
+        Typeface typeface = ResourcesCompat.getFont(getActivity(), R.font.montserrat_regular);
+        etTextInput.setTypeface(typeface);
 
 
         fView.findViewById(R.id.places_autocomplete_search_button).setVisibility(View.GONE);
@@ -257,6 +261,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
             @Override
             public void onError(Status status) {
+                System.out.println();
             }
         });
 
@@ -272,6 +277,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         etTextInputD.setBackgroundResource(R.drawable.textfield);
         etTextInputD.setHintTextColor(Color.WHITE);
         etTextInputD.setTextSize(12.5f);
+        etTextInputD.setTypeface(typeface);
 
 
         fViewD.findViewById(R.id.places_autocomplete_search_button).setVisibility(View.GONE);
@@ -394,6 +400,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                     if(DB.hasCars()){
                         float total = calculateTotalCost();
                         ok = round(total, 2) + "€ x Pers.";
+                        PriceDialog.getInstance(getContext()).showInform("Total Cost", ok);
                     }else{
                         ok = "Please setup a car!";
                         Animation anim = new AlphaAnimation(0.0f, 1.0f);
@@ -402,11 +409,13 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                         anim.setRepeatMode(Animation.REVERSE);
                         anim.setRepeatCount(Animation.INFINITE);
                         ((MainActivity)getActivity()).getConfig().startAnimation(anim);
+                        DB.makeCustomToast(getActivity(),ok);
                     }
                 }else{
                     ok = "Non-valid values. Please fill again";
+                    DB.makeCustomToast(getActivity(),ok);
                 }
-                DB.makeCustomToast(getActivity(),ok);
+
             }
         });
 
@@ -620,13 +629,14 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
         }
 
-
-
         map.getUiSettings().setZoomControlsEnabled(false);
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setScrollGesturesEnabled(true);
+
+        //zoomToMyLocation();
         map.resetMinMaxZoomPreference();
-        zoomToMyLocation();
+        map.setMaxZoomPreference(16.0f);
+
     }
 
     private void zoomToMyLocation(){
@@ -638,12 +648,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 @Override
                 public void onSuccess(Location location) {
                     LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-                    int padding = 200;
-                    map.setMaxZoomPreference(3.0f);
-                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                    builder.include(loc);
-                    LatLngBounds bounds = builder.build();
-                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                    CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(loc, 3.0f);
                     map.animateCamera(cu);
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -652,7 +657,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
                 }
             });
-            map.setMaxZoomPreference(16.0f);
         }
     }
 

@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.vx.dyvide.R;
+import com.vx.dyvide.controller.dialogs.PriceDialog;
 import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
 import com.vx.dyvide.model.DB.SavedConfig;
@@ -73,16 +74,17 @@ public class ManualFragment  extends Fragment {
                     if(DB.hasCars()){
                         float total = calculateTotalCost();
                         ok = round(total, 2) + "€ x Pers.";
-                        totalCost.setVisibility(View.VISIBLE);
-                        totalCost.setText("Total: "+ ok);
+                        PriceDialog.getInstance(getContext()).showInform("Total Cost", ok);
                     }else{
                         ok = "Please setup a car!";
+                        DB.makeCustomToast(getActivity(), ok);
                     }
 
                 }else{
                     ok = "Non-valid values. Please fill again";
+                    DB.makeCustomToast(getActivity(), ok);
                 }
-                DB.makeCustomToast(getActivity(), ok);
+
             }
         });
 

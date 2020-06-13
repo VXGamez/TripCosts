@@ -1,5 +1,6 @@
 package com.vx.dyvide.controller.onboarding;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,6 +42,9 @@ public class OnboardingActivity extends AppCompatActivity {
             if (viewPager.getCurrentItem() < onboardingAdapter.getCount() - 1) {
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
             }else if(((Button) view).getText().equals("Finish")){
+                Intent data = new Intent();
+                data.putExtra("onboard","TRUE");
+                setResult(RESULT_OK,data);
                 finish();
             }
         }

@@ -37,6 +37,7 @@
                 android:layout_marginTop="10dp"
                 android:textAlignment="textStart"
                 android:layout_marginLeft="80dp"
+                android:fontFamily="@font/montserrat_semibold"
                 android:textColor="#000000"
                 android:textSize="15sp"
                 android:inputType="numberDecimal"
@@ -46,6 +47,7 @@
             <EditText
                 android:id="@+id/totalKM"
                 android:layout_marginLeft="80dp"
+                android:fontFamily="@font/montserrat_regular"
                 android:layout_width="250dp"
                 android:hint="Total km"
                 android:layout_height="40dp"
@@ -59,6 +61,7 @@
                 android:textAlignment="textStart"
                 android:layout_marginLeft="80dp"
                 android:textColor="#000000"
+                android:fontFamily="@font/montserrat_semibold"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:text="To divide between: "/>
@@ -67,6 +70,7 @@
                 android:id="@+id/totalPassengers"
                 android:layout_marginLeft="80dp"
                 android:layout_width="250dp"
+                android:fontFamily="@font/montserrat_regular"
                 android:backgroundTint="@color/colorPrimary"
                 android:layout_height="40dp"
                 android:hint="Total passengers"
@@ -99,6 +103,7 @@
                     android:layout_marginLeft="80dp"
                     android:textColor="#000000"
                     android:textSize="15sp"
+                    android:fontFamily="@font/montserrat_semibold"
                     android:textStyle="bold"
                     android:text="Toll Total: "/>
 
@@ -106,6 +111,7 @@
                     android:id="@+id/tollCost"
                     android:layout_marginLeft="80dp"
                     android:layout_width="250dp"
+                    android:fontFamily="@font/montserrat_regular"
                     android:backgroundTint="@color/colorPrimary"
                     android:layout_height="40dp"
                     android:hint="Total toll costs"
@@ -131,12 +137,14 @@
             android:textStyle="bold"
             android:textAllCaps="true"
             android:textSize="20dp"
+            android:fontFamily="@font/montserrat_semibold"
             android:background="@drawable/roundedxml"
             android:textColor="#FFFF"/>
         <TextView
             android:layout_width="200dp"
             android:layout_height="20dp"
             android:textAlignment="center"
+            android:fontFamily="@font/montserrat_light"
             android:layout_marginTop="50dp"
             android:layout_gravity="center_horizontal"
             android:textColor="#959595"

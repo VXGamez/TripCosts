@@ -39,6 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="30sp"
+                    android:fontFamily="@font/montserrat_semibold"
                     android:textColor="#FAFAFA"
                     android:textStyle="bold"
                     android:textAlignment="center"
@@ -51,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textColor="#FAFAFA"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="15sp"
                 android:text="Are you sure?"/>
 
@@ -67,6 +69,7 @@
                     android:background="@drawable/roundedwhite"
                     android:textColor="#7ED31F"
                     android:textStyle="bold"
+                    android:fontFamily="@font/montserrat_semibold"
                     android:layout_marginRight="30dp"
                     android:text="accept"/>
 
@@ -76,6 +79,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundedwhite"
                     android:textColor="#7ED31F"
+                    android:fontFamily="@font/montserrat_semibold"
                     android:textStyle="bold"
                     android:text="Cancel"/>
 
