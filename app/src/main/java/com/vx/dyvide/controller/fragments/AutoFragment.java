@@ -39,6 +39,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -115,8 +116,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     private LatLng origin;
     private LatLng destination;
 
-    private AutocompleteSupportFragment autocompleteOrigin;
-    private AutocompleteSupportFragment autocompleteDestination;
+    public static AutocompleteSupportFragment autocompleteOrigin;
+    public static AutocompleteSupportFragment autocompleteDestination;
     private ImageButton clearButtonOrigin;
     private ImageButton clearButtonDestination;
 
@@ -153,7 +154,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
-
 
     private void swapDestinations(){
         LatLng tmp = destination;
@@ -205,7 +205,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         return bitmap;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -240,7 +239,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 clearOrigin.setVisibility(View.GONE);
             }
         });
-
         clearButtonOrigin = view.findViewById(R.id.clearOrigin);
         clearButtonOrigin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,8 +253,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 clearButtonOrigin.setVisibility(View.GONE);
             }
         });
-
-
         autocompleteOrigin.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -290,6 +286,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         etTextInputD.setTypeface(typeface);
 
 
+
         fViewD.findViewById(R.id.places_autocomplete_search_button).setVisibility(View.GONE);
         ImageButton clearOriginD = fViewD.findViewById(R.id.places_autocomplete_clear_button);
         clearOriginD.setTag(clearOriginD.getVisibility());
@@ -302,7 +299,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 clearOriginD.setVisibility(View.GONE);
             }
         });
-
         clearButtonDestination = view.findViewById(R.id.clearDestination);
         clearButtonDestination.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -317,8 +313,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 clearButtonDestination.setVisibility(View.GONE);
             }
         });
-
-
         autocompleteDestination.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -333,12 +327,9 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
             @Override
             public void onError(Status status) {
-                Log.i("IHH", "An error occurred: " + status);
+
             }
         });
-
-
-
 
 
         tolls = view.findViewById(R.id.tolls);
@@ -491,6 +482,64 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         });
     }
 
+    public void setOriginCurrentLocation(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermission();
+        }
+        fusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                if(destination!=null && (location.getLatitude() == destination.latitude && location.getLongitude() == destination.longitude) ){
+                    DB.makeCustomToast(getActivity(),"Origin and destination cannot be the same");
+                }else{
+                    origin = loc;
+                    autocompleteOrigin.setText("My Location");
+                    originMarker = map.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
+                    updateMapZoom();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
+    private void updateMapZoom(){
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        int padding = 0;
+        if(origin!=null){
+            builder.include(origin);
+            if(padding>0){
+                padding=200;
+            }else{
+                padding=120;
+            }
+        }
+        if(destination!=null){
+            builder.include(destination);
+            if(padding>0){
+                padding=200;
+            }else{
+                padding=120;
+            }
+        }
+
+        if(origin!=null || destination!=null){
+            LatLngBounds bounds = builder.build();
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            map.animateCamera(cu);
+            if(origin!=null && destination!=null){
+                hideKeyboard(getActivity());
+                RouteManager.getInstance(this).getRouteHeader(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
+                drawRoute();
+                updateTotalTripCost();
+            }
+        }
+
+    }
 
     private float calculateTotalCost() {
         float totalCost;
@@ -536,40 +585,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         return ok;
     }
 
-    private void updateMapZoom(){
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        int padding = 0;
-        if(origin!=null){
-            builder.include(origin);
-            if(padding>0){
-                padding=200;
-            }else{
-                padding=120;
-            }
-        }
-        if(destination!=null){
-            builder.include(destination);
-            if(padding>0){
-                padding=200;
-            }else{
-                padding=120;
-            }
-        }
-
-        if(origin!=null || destination!=null){
-            LatLngBounds bounds = builder.build();
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-            map.animateCamera(cu);
-            if(origin!=null && destination!=null){
-                hideKeyboard(getActivity());
-                RouteManager.getInstance(this).getRouteHeader(origin, destination, getVehicleType(), DB.getCurrentVehicle().getConsum(), 1.48f, this);
-                drawRoute();
-                updateTotalTripCost();
-            }
-        }
-
-    }
-
     private void updateTotalTripCost() {
         totalTripCostTXT.setText("Total trip cost: " + round(totalTripCost, 2) + "€");
     }
@@ -581,37 +596,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         tollRecycle.setAdapter(adapter);
     }
 
-    private int getVehicleType() {
-        return 0;
-    }
-
-
-    public void setOriginCurrentLocation(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkPermission();
-        }
-        fusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-                if(destination!=null && (location.getLatitude() == destination.latitude && location.getLongitude() == destination.longitude) ){
-                    DB.makeCustomToast(getActivity(),"Origin and destination cannot be the same");
-                }else{
-                    origin = loc;
-                    autocompleteOrigin.setText("My Location");
-                    originMarker = map.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
-                    updateMapZoom();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-    }
-
-
     public void checkPermission(){
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(getActivity(),android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -619,7 +603,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION}, 123);
         }
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -642,11 +625,9 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         map.getUiSettings().setZoomControlsEnabled(false);
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setScrollGesturesEnabled(true);
-
-        //zoomToMyLocation();
+        zoomToMyLocation();
         map.resetMinMaxZoomPreference();
         map.setMaxZoomPreference(16.0f);
-
     }
 
     private void zoomToMyLocation(){
@@ -670,11 +651,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        zoomToMyLocation();
-    }
 
     private void drawRoute() {
         if(origin == destination){
@@ -683,7 +659,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             new FetchURL(this).execute(getUrl(origin, destination, "driving"), "driving");
         }
     }
-
 
     private String getUrl(LatLng origin, LatLng dest, String directionMode) {
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
@@ -694,8 +669,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
         return url;
     }
-
-   
 
     @Override
     public void onTaskDone(Object... values) {
@@ -708,10 +681,21 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     public void totalValues(String totalKM, int totalDistanceValue, String totalDuration, int totalDurationValue) {
         this.totalKM.setText("Total distance: " + totalKM);
         this.totalKMCalculats = totalDistanceValue;
-        totalTripCost = (metersToKM()/100)*DB.getCurrentVehicle().getConsum();
+        float fuelCost = 0;
+        float fuelType = DB.getVehicles().get(ObjectBox.get().boxFor(SavedConfig.class).get(1).selectedVehicle).getFuel();
+        if(fuelType == 0){
+            //diesel
+            fuelCost = (float) 1.008;
+        }else if(fuelType == 1){
+            //gasolina
+            fuelCost = (float) 1.48;
+        }else if(fuelType == 2){
+            //electric
+            fuelCost = -1;
+        }
+        totalTripCost = (DB.getCurrentVehicle().getConsum()*(metersToKM()/100))*fuelCost;
         updateTotalTripCost();
     }
-
 
     @Override
     public void onHeaderRecieved(Summary body) {
@@ -729,7 +713,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 tollSwitch.setVisibility(View.VISIBLE);
                 totalTollCostTXT.setText("Total toll cost: " + totalTollCost +"€");
                 updateTotalTripCost();
-                RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, getVehicleType(), DB.getCurrentVehicle().getConsum(), 1.48f, this);
+                RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
             }
         }
 

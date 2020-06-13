@@ -15,8 +15,16 @@ public class SavedConfig {
 
     @Id(assignable = true) public long id;
     public int selectedVehicle;
+    public int isOnboard;
     public String vehicles;
 
+    public int isOnboard() {
+        return isOnboard;
+    }
+
+    public void setOnboard(int onboard) {
+        isOnboard = onboard;
+    }
 
     public void saveVehicles(ArrayList<Vehicle> coches) {
         Gson gson = new Gson();

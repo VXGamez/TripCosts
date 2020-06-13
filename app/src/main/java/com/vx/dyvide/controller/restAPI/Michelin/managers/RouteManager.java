@@ -62,11 +62,11 @@ public class RouteManager {
         return c;
     }
 
-    public synchronized void getRouteHeader(LatLng origin, LatLng destination, int vehicleType, float consumption, float fuelCost, final MichelinCallback callback) {
+    public synchronized void getRouteHeader(LatLng origin, LatLng destination, float consumption, float fuelCost, final MichelinCallback callback) {
 
         //vehicle type: 0:Car | 1:Truck | 2:On foot | 3: Cycle | 4:Moto
 
-        Call<String> call = michelinService.getHeader(makeSteps(origin, destination), vehicleType, makeConsumption(consumption), fuelCost, "EUR",  MichelinINFO.API_KEY, "onResponse");
+        Call<String> call = michelinService.getHeader(makeSteps(origin, destination), makeConsumption(consumption), fuelCost, "EUR",  MichelinINFO.API_KEY, "onResponse");
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -89,11 +89,11 @@ public class RouteManager {
         });
     }
 
-    public synchronized void getRouteRoadsheet(LatLng origin, LatLng destination, int vehicleType, float consumption, float fuelCost, final MichelinCallback callback) {
+    public synchronized void getRouteRoadsheet(LatLng origin, LatLng destination, float consumption, float fuelCost, final MichelinCallback callback) {
 
         //vehicle type: 0:Car | 1:Truck | 2:On foot | 3: Cycle | 4:Moto
 
-        Call<String> call = michelinService.getRoadsheet(makeSteps(origin, destination), vehicleType, makeConsumption(consumption), fuelCost, "EUR",  MichelinINFO.API_KEY, "onResponse");
+        Call<String> call = michelinService.getRoadsheet(makeSteps(origin, destination),makeConsumption(consumption), fuelCost, "EUR",  MichelinINFO.API_KEY, "onResponse");
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

@@ -47,7 +47,7 @@ public class ConnectivityService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        interval = intent.getIntExtra(TAG_INTERVAL, 10);
+        interval = 3;
 
         mTimer = new Timer();
         mTimer.scheduleAtFixedRate(new CheckForConnection(), 0, interval * 1000);

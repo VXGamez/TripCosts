@@ -69,6 +69,7 @@ public class DB {
     public static void createConfig(){
         SavedConfig c = new SavedConfig();
         c.setId(1);
+        c.setOnboard(0);
         c.selectedVehicle = -3;
         Vehicle v = new Vehicle(-5, "Add", 0, -3);
         ArrayList<Vehicle> array = new ArrayList<>();
@@ -77,4 +78,8 @@ public class DB {
         ObjectBox.get().boxFor(SavedConfig.class).put(c);
     }
 
+    public static boolean isOnboard() {
+        int on = ObjectBox.get().boxFor(SavedConfig.class).get(1).isOnboard;
+        return on==1;
+    }
 }

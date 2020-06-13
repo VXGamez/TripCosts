@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.vx.dyvide.R;
+import com.vx.dyvide.model.DB.ObjectBox;
+import com.vx.dyvide.model.DB.SavedConfig;
 
 
 public class OnboardingActivity extends AppCompatActivity {
@@ -36,15 +38,14 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
 
-    // Listener for next button press
     public void nextPage(View view) {
         if (view.getId() == R.id.button2) {
             if (viewPager.getCurrentItem() < onboardingAdapter.getCount() - 1) {
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
             }else if(((Button) view).getText().equals("Finish")){
-                Intent data = new Intent();
-                data.putExtra("onboard","TRUE");
-                setResult(RESULT_OK,data);
+                SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
+                c.setOnboard(1);
+                ObjectBox.get().boxFor(SavedConfig.class).put(c);
                 finish();
             }
         }

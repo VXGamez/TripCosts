@@ -47,6 +47,7 @@ import com.vx.dyvide.controller.restAPI.Michelin.managers.RouteManager;
 import com.vx.dyvide.controller.service.ConnectivityService;
 import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
+import com.vx.dyvide.model.DB.SavedConfig;
 import com.vx.dyvide.model.HERE.PriceResponse;
 import com.vx.dyvide.model.Michelin.Iti;
 import com.vx.dyvide.model.Michelin.ItiRoadsheet;
@@ -56,6 +57,9 @@ import com.vx.dyvide.model.Michelin.Summary;
 import java.util.ArrayList;
 
 import retrofit2.Response;
+
+import static com.vx.dyvide.controller.fragments.AutoFragment.autocompleteDestination;
+import static com.vx.dyvide.controller.fragments.AutoFragment.autocompleteOrigin;
 
 public class MainActivity extends AppCompatActivity implements HereCallback {
 
@@ -84,18 +88,19 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         unregisterReceiver(connectionRegained);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 131) {
-            if (resultCode == RESULT_OK) {
-                String onboard = data.getStringExtra("onboard");
-                if(onboard.equals("TRUE")){
-                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
-                }
-            }
-        }
+       if(DB.isOnboard()){
+           Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+           SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
+           c.setOnboard(2);
+           ObjectBox.get().boxFor(SavedConfig.class).put(c);
+           startActivity(intent);
+           overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
+
+       }
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {
@@ -140,7 +145,6 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         Intent intent = new Intent(this, ConnectivityService.class);
-        intent.putExtra(ConnectivityService.TAG_INTERVAL, 3);
         startService(intent);
 
         vpPager = (ViewPager) findViewById(R.id.vpPager);
@@ -155,7 +159,12 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
             @Override
             public void onPageSelected(int position) {
                 if(position==0){
-                    springAnimation.animateToFinalPosition(20);
+                    if(!DB.noInternet(getApplication())){
+                        springAnimation.animateToFinalPosition(20);
+                    }else{
+                        vpPager.setCurrentItem(1);
+                        DB.makeCustomToast(getApplication(), "Not available without internet");
+                    }
                 }else if(position==1){
                     springAnimation.animateToFinalPosition(20+(width/3));
                 }else if(position==2){
@@ -174,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         if(!DB.hasConfig()){
             DB.createConfig();
             Intent intento = new Intent(this, OnboardingActivity.class);
-            startActivityForResult(intento, 131);
+            startActivity(intento);
             overridePendingTransition(R.anim.nothing, R.anim.nothing);
         }else{
             if(!DB.hasCars()){

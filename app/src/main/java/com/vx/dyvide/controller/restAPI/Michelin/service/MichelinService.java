@@ -10,10 +10,10 @@ import retrofit2.http.Query;
 
 public interface MichelinService {
     @GET("1/route.json/eng/header")
-    Call<String> getHeader(@Query(value="steps", encoded=true) String steps, @Query(value="veht", encoded=true) int vehicleType, @Query("fuelConsump.city") String consumption, @Query("fuelCost") float fuelCost, @Query("cy") String currency, @Query("authkey") String apiKey, @Query("callback") String callbackFunction);
+    Call<String> getHeader(@Query(value="steps", encoded=true) String steps, @Query("fuelConsump.city") String consumption, @Query("fuelCost") float fuelCost, @Query("cy") String currency, @Query("authkey") String apiKey, @Query("callback") String callbackFunction);
 
     @GET("1/route.json/eng/roadsheet")
-    Call<String> getRoadsheet(@Query(value="steps", encoded=true) String steps, @Query(value="veht", encoded=true) int vehicleType, @Query("fuelConsump.city") String consumption,@Query("fuelCost") float fuelCost, @Query("cy") String currency, @Query("authkey") String apiKey, @Query("callback") String callbackFunction);
+    Call<String> getRoadsheet(@Query(value="steps", encoded=true) String steps, @Query("fuelConsump.city") String consumption,@Query("fuelCost") float fuelCost, @Query("cy") String currency, @Query("authkey") String apiKey, @Query("callback") String callbackFunction);
 
 
 }

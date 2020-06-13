@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:5057457448532265647",
-      "lastPropertyId": "11:9202066382518545218",
+      "lastPropertyId": "12:5029759172604270202",
       "name": "SavedConfig",
       "properties": [
         {
@@ -24,6 +24,12 @@
           "id": "11:9202066382518545218",
           "name": "vehicles",
           "type": 9
+        },
+        {
+          "id": "12:5029759172604270202",
+          "name": "isOnboard",
+          "type": 5,
+          "flags": 4
         }
       ],
       "relations": []
