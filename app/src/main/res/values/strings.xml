@@ -12,5 +12,8 @@
     <string name="demo_title">Lorem Ipsum</string>
     <string name="next">Next</string>
     <string name="toll_content">"If your trip includes tolls, they can be added to the cost. You can always change this setting however you like"</string>
+    <string name="more_info">Discover more content within the app! Not only are there more functionalities available, but much more to come!</string>
+    <string name="dyvide_info">Calculate the cost of a trip with your car and divide it with your friends easily. Setup your personal preferences and easily calculate your vehicle expenses.</string>
+    <string name="welcome_info">With dyvide your car expenses will no longer be a headache! Follow these instructions to see how dyvide can help you do so. </string>
 
 </resources>
