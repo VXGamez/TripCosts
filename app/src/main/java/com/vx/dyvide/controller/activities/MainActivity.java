@@ -6,7 +6,11 @@ import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -60,13 +64,17 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     private TextView auto;
     private TextView manual;
     private TextView support;
-    private SpringAnimation springAnimation;
-    private int width;
+    private static SpringAnimation springAnimation;
+    private static int width;
     private boolean inicialized = false;
     private boolean hasInternet = true;
     private boolean needsOnboard = true;
     private Fragment menu;
+    private ViewPager vpPager;
     private AdView mAdView;
+
+    private FragmentPagerAdapter adapterViewPager;
+
 
 
     @Override
@@ -90,6 +98,39 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         }
     }
 
+    public static class MyPagerAdapter extends FragmentPagerAdapter {
+        private static int NUM_ITEMS = 3;
+
+        public MyPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return AutoFragment.newInstance(0, "Auto Route");
+                case 1:
+                    return ManualFragment.newInstance(1, "Manual");
+                case 2:
+                    return SupportFragment.newInstance(2, "Support");
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Page " + position;
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +142,32 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         Intent intent = new Intent(this, ConnectivityService.class);
         intent.putExtra(ConnectivityService.TAG_INTERVAL, 3);
         startService(intent);
+
+        vpPager = (ViewPager) findViewById(R.id.vpPager);
+        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+        vpPager.setAdapter(adapterViewPager);
+        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position==0){
+                    springAnimation.animateToFinalPosition(20);
+                }else if(position==1){
+                    springAnimation.animateToFinalPosition(20+(width/3));
+                }else if(position==2){
+                    springAnimation.animateToFinalPosition(20+(width/3)*2);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         mAdView = findViewById(R.id.adView);
 
@@ -232,37 +299,24 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        this.width = size.x;
+        width = size.x;
     }
 
-    private void initManual() {
-        springAnimation.animateToFinalPosition(20+(this.width/3));
-        ManualFragment manualFragment = new ManualFragment();
+    private  void initManual() {
+        vpPager.setCurrentItem(1);
+        springAnimation.animateToFinalPosition(20+(width/3));
 
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction()
-                .replace(R.id.typeLayout, manualFragment, manualFragment.getTag())
-                .commit();
     }
 
-    private void initSupport() {
-        springAnimation.animateToFinalPosition(20+(this.width/3)*2);
-        SupportFragment supportFragment = new SupportFragment();
-
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction()
-                .replace(R.id.typeLayout, supportFragment, supportFragment.getTag())
-                .commit();
+    private  void initSupport() {
+        vpPager.setCurrentItem(2);
+        springAnimation.animateToFinalPosition(20+(width/3)*2);
     }
 
-    void initAuto(){
+    private void initAuto(){
+
         springAnimation.animateToFinalPosition(20);
-        AutoFragment autoFragment = new AutoFragment();
-
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction()
-                .replace(R.id.typeLayout, autoFragment, autoFragment.getTag())
-                .commit();
+        vpPager.setCurrentItem(0);
 
     }
 

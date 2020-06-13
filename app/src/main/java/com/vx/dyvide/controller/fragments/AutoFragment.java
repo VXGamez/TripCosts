@@ -145,6 +145,16 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     private Button calculate;
 
 
+    public static AutoFragment newInstance(int page, String title) {
+        AutoFragment fragmentFirst = new AutoFragment();
+        Bundle args = new Bundle();
+        args.putInt("someInt", page);
+        args.putString("someTitle", title);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
+
+
     private void swapDestinations(){
         LatLng tmp = destination;
         destination = origin;

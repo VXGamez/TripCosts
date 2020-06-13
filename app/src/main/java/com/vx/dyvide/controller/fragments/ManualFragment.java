@@ -36,6 +36,15 @@ public class ManualFragment  extends Fragment {
 
     private TextView totalCost;
 
+    public static ManualFragment newInstance(int page, String title) {
+        ManualFragment fragmentFirst = new ManualFragment();
+        Bundle args = new Bundle();
+        args.putInt("someInt", page);
+        args.putString("someTitle", title);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

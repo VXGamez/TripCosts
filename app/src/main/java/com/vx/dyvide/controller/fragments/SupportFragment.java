@@ -35,6 +35,15 @@ public class SupportFragment extends Fragment {
     private RecyclerView faqRecycle;
     private Button form;
 
+    public static SupportFragment newInstance(int page, String title) {
+        SupportFragment fragmentFirst = new SupportFragment();
+        Bundle args = new Bundle();
+        args.putInt("someInt", page);
+        args.putString("someTitle", title);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
