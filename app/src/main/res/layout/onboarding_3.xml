@@ -65,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="461dp" />
+        app:layout_constraintGuide_percent="0.7" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline8"
@@ -112,7 +112,6 @@
         android:id="@+id/textView8"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:fontFamily="@font/sarabun_regular"
         android:text="@string/toll_content"
         android:textAlignment="center"
@@ -123,7 +122,6 @@
         app:layout_constraintHorizontal_bias="0.177"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/textView7"
-        app:layout_constraintVertical_bias="0.0"
         tools:text="@string/toll_content" />
 
     <androidx.constraintlayout.widget.Guideline

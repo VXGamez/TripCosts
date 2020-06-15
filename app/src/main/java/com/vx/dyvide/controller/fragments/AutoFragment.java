@@ -380,14 +380,22 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         myLocationOrigin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setOriginCurrentLocation();
+                if(DB.isLocationEnabled(getActivity())){
+                    setOriginCurrentLocation();
+                }else{
+                    ErrorDialog.getInstance(getActivity()).showErrorDialog("Location not enabled.");
+                }
             }
         });
         myLocationDestination = view.findViewById(R.id.myLocationDestination);
         myLocationDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setDestinationCurrentLocation();
+                if(DB.isLocationEnabled(getActivity())){
+                    setDestinationCurrentLocation();
+                }else{
+                    ErrorDialog.getInstance(getActivity()).showErrorDialog("Location not enabled.");
+                }
             }
         });
 
@@ -480,6 +488,10 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 if(origin!=null && (location.getLatitude() == origin.latitude && location.getLongitude() == origin.longitude) ){
                     DB.makeCustomToast(getActivity(),"Origin and destination cannot be the same");
                 }else{
+                    if(destinationMarker!=null){
+                        destinationMarker.remove();
+                        destinationMarker = null;
+                    }
                     destination = loc;
                     autocompleteDestination.setText("My Location");
                     destinationMarker = map.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_dpin))));
@@ -506,6 +518,10 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 if(destination!=null && (location.getLatitude() == destination.latitude && location.getLongitude() == destination.longitude) ){
                     DB.makeCustomToast(getActivity(),"Origin and destination cannot be the same");
                 }else{
+                    if(originMarker!=null){
+                        originMarker.remove();
+                        originMarker = null;
+                    }
                     origin = loc;
                     autocompleteOrigin.setText("My Location");
                     originMarker = map.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
@@ -637,7 +653,9 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         map.getUiSettings().setZoomControlsEnabled(false);
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setScrollGesturesEnabled(true);
-        zoomToMyLocation();
+        if(DB.isLocationEnabled(getActivity())){
+            zoomToMyLocation();
+        }
         map.resetMinMaxZoomPreference();
         map.setMaxZoomPreference(16.0f);
     }

@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -69,6 +70,13 @@ public class DB {
         cars.remove(0);
         cars.add(v);
         return cars;
+    }
+
+    public static boolean isLocationEnabled(Context context){
+        int mode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE,
+                Settings.Secure.LOCATION_MODE_OFF);
+        final boolean enabled = (mode != android.provider.Settings.Secure.LOCATION_MODE_OFF);
+        return enabled;
     }
 
     public static void createConfig(){

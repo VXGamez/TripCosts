@@ -24,6 +24,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -155,6 +156,14 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         }
 
     }
+    public void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
                 }else if(position==2){
                     springAnimation.animateToFinalPosition(20+(width/3)*2);
                 }
+                hideKeyboard(MainActivity.this);
             }
 
             @Override
