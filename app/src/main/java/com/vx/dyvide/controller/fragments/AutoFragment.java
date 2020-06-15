@@ -650,9 +650,11 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             fusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-                    CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(loc, 3.0f);
-                    map.animateCamera(cu);
+                    if(location!=null){
+                        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                        CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(loc, 3.0f);
+                        map.animateCamera(cu);
+                    }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

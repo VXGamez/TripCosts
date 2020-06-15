@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     private ViewPager vpPager;
     private AdView mAdView;
 
+    private LinearLayout currentLayout;
+
     private ImageView currentImage;
     private TextView currentName;
 
@@ -105,13 +108,19 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
            overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
        }
 
-       Vehicle current = DB.getCurrentVehicle();
-        if(current.getType()==1){
-            currentImage.setBackgroundResource(R.drawable.ic_car);
-        }else if(current.getType()==2){
-            currentImage.setBackgroundResource(R.drawable.ic_moto);
-        }
-        currentName.setText("Selected: \n" + current.getName());
+       if(DB.hasCars()){
+           currentLayout.setVisibility(View.VISIBLE);
+           Vehicle current = DB.getCurrentVehicle();
+           if(current.getType()==1){
+               currentImage.setBackgroundResource(R.drawable.ic_car);
+           }else if(current.getType()==2){
+               currentImage.setBackgroundResource(R.drawable.ic_moto);
+           }
+           currentName.setText("Selected: \n" + current.getName());
+       }else{
+           currentLayout.setVisibility(View.INVISIBLE);
+       }
+
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {
@@ -160,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
 
         currentImage = findViewById(R.id.selectedVehicle);
         currentName = findViewById(R.id.selectedVehicleName);
-
+        currentLayout = findViewById(R.id.current);
         vpPager = (ViewPager) findViewById(R.id.vpPager);
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(adapterViewPager);
