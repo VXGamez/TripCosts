@@ -18,6 +18,8 @@ import java.util.List;
 
 public class DB {
 
+    public static Toast toast;
+
     public static boolean hasConfig(){
         List<SavedConfig> list = ObjectBox.get().boxFor(SavedConfig.class).query().equal(SavedConfig_.id, 1).build().find();
         return list.size() ==1;
@@ -36,7 +38,10 @@ public class DB {
     }
 
     public static void makeCustomToast(Context c, String ok){
-        Toast toast = Toast.makeText(c, ok, Toast.LENGTH_SHORT);
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(c, ok, Toast.LENGTH_SHORT);
         View view = toast.getView();
         view.getBackground().setColorFilter(Color.parseColor("#7ED31F"), PorterDuff.Mode.SRC_IN);
         TextView text = view.findViewById(android.R.id.message);

@@ -25,6 +25,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ import com.vx.dyvide.model.Michelin.Iti;
 import com.vx.dyvide.model.Michelin.ItiRoadsheet;
 import com.vx.dyvide.model.Michelin.RoadSheet;
 import com.vx.dyvide.model.Michelin.Summary;
+import com.vx.dyvide.model.Vehicle;
 
 import java.util.ArrayList;
 
@@ -77,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     private ViewPager vpPager;
     private AdView mAdView;
 
+    private ImageView currentImage;
+    private TextView currentName;
+
     private FragmentPagerAdapter adapterViewPager;
 
 
@@ -91,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     @Override
     protected void onResume() {
         super.onResume();
-
        if(DB.isOnboard()){
            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
            SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
@@ -99,8 +103,15 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
            ObjectBox.get().boxFor(SavedConfig.class).put(c);
            startActivity(intent);
            overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
-
        }
+
+       Vehicle current = DB.getCurrentVehicle();
+        if(current.getType()==1){
+            currentImage.setBackgroundResource(R.drawable.ic_car);
+        }else if(current.getType()==2){
+            currentImage.setBackgroundResource(R.drawable.ic_moto);
+        }
+        currentName.setText("Selected: \n" + current.getName());
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {
@@ -146,6 +157,9 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
 
         Intent intent = new Intent(this, ConnectivityService.class);
         startService(intent);
+
+        currentImage = findViewById(R.id.selectedVehicle);
+        currentName = findViewById(R.id.selectedVehicleName);
 
         vpPager = (ViewPager) findViewById(R.id.vpPager);
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
@@ -265,11 +279,8 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        String apiKey = getString(R.string.google_maps_key);
-
-
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), apiKey);
+            Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
         }
     }
 

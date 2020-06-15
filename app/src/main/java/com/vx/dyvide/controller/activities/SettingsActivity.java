@@ -58,6 +58,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
     private ImageButton chooseCar;
     private ImageButton chooseMoto;
     private EditText vehicleName;
+    private boolean adding=false;
     private EditText consum;
     private int selectedFuel = -3;
     private TextView type;
@@ -138,6 +139,9 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                adding = false;
+                allCars.setAlpha((float) 1.0);
+                allCars.setEnabled(true);
                 vehiclePressed(DB.getVehicles().get(currentVehicle), currentVehicle);
             }
         });
@@ -158,18 +162,36 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (everythingDone()) {
-                    DB.addVehicle(new Vehicle(whatType(), vehicleName.getText().toString(), Float.parseFloat(consum.getText().toString()), selectedFuel));
-                    currentVehicle = DB.getVehicles().size()-2;
-                    reload();
-                } else {
-                    Toast toast = Toast.makeText(SettingsActivity.this, "Please fill everything", Toast.LENGTH_SHORT);
-                    View view = toast.getView();
-                    view.getBackground().setColorFilter(Color.parseColor("#7ED31F"), PorterDuff.Mode.SRC_IN);
-                    TextView text = view.findViewById(android.R.id.message);
-                    text.setTextColor(Color.WHITE);
-                    text.setTypeface(text.getTypeface(), Typeface.BOLD);
-                    toast.show();
+                int totOk = everythingDone();
+                String message = "";
+                switch (totOk){
+                    case 0:
+                        DB.addVehicle(new Vehicle(whatType(), vehicleName.getText().toString(), Float.parseFloat(consum.getText().toString()), selectedFuel));
+                        currentVehicle = DB.getVehicles().size()-2;
+                        reload();
+                        adding = false;
+                        allCars.setAlpha((float) 1.0);
+                        allCars.setEnabled(true);
+                        break;
+                    case 1:
+                        message = "Please select your vehicle type";
+                        break;
+                    case 2:
+                        message = "Please add a name to your vehicle";
+                        break;
+                    case 3:
+                        message = "Please add consumption to your vehicle";
+                        break;
+                    case 4:
+                        message = "Please select a fuel type";
+                        break;
+                    case 5:
+                        message = "Vehicle name is too long!";
+                        break;
+
+                }
+                if (totOk!=0) {
+                 DB.makeCustomToast(SettingsActivity.this, message);
                 }
 
             }
@@ -279,16 +301,18 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
     }
 
 
-    private boolean everythingDone() {
-        boolean ok = true;
+    private int everythingDone() {
+        int ok = 0;
         if (type.getText().toString().equals("")) {
-            ok = false;
+            ok = 1;
         } else if (vehicleName.getText().toString().equals("")) {
-            ok = false;
+            ok = 2;
         } else if (consum.getText().toString().equals("")) {
-            ok = false;
-        } else if (selectedFuel == -3) {
-            ok = false;
+            ok = 3;
+        }else if (selectedFuel < 0 ) {
+            ok = 4;
+        }else if(vehicleName.getText().toString().length()>20){
+            ok = 5;
         }
         return ok;
     }
@@ -296,6 +320,9 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
     @Override
     public void createNewVehicle() {
         newCar.setVisibility(View.VISIBLE);
+        adding = true;
+        allCars.setAlpha((float) 0.30);
+        allCars.setEnabled(false);
         carInfo.setVisibility(View.GONE);
         resetNewCar();
     }
@@ -338,16 +365,19 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
 
     @Override
     public void vehiclePressed(Vehicle vehicle, int position) {
-        currentVehicle = position;
-        SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
-        c.setSelectedVehicle(currentVehicle);
-        ObjectBox.get().boxFor(SavedConfig.class).put(c);
-        newCar.setVisibility(View.GONE);
-        carInfo.setVisibility(View.VISIBLE);
-        carNameFuel.setText(new StringBuilder().append(fuelType(vehicle)).append(" ").append(vehicleType(vehicle)).toString());
-        editName.setText(vehicle.getName());
-        name.setText(vehicle.getName());
-        editConsu.setText(String.format("%s", vehicle.getConsum()));
+        if(!adding){
+            DB.makeCustomToast(this, vehicle.getName() + " selected!");
+            currentVehicle = position;
+            SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
+            c.setSelectedVehicle(currentVehicle);
+            ObjectBox.get().boxFor(SavedConfig.class).put(c);
+            newCar.setVisibility(View.GONE);
+            carInfo.setVisibility(View.VISIBLE);
+            carNameFuel.setText(new StringBuilder().append(fuelType(vehicle)).append(" ").append(vehicleType(vehicle)).toString());
+            editName.setText(vehicle.getName());
+            name.setText(vehicle.getName());
+            editConsu.setText(String.format("%s", vehicle.getConsum()));
+        }
     }
 
 

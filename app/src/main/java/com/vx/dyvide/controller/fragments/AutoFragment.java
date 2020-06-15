@@ -397,23 +397,36 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             @Override
             public void onClick(View v) {
                 String ok = "";
-                if(totOK()){
-                    if(DB.hasCars()){
-                        float total = calculateTotalCost();
-                        ok = round(total, 2) + "€ x Pers.";
-                        PriceDialog.getInstance(getContext()).showInform("Total Cost", ok);
-                    }else{
-                        ok = "Please setup a car!";
-                        Animation anim = new AlphaAnimation(0.0f, 1.0f);
-                        anim.setDuration(50);
-                        anim.setStartOffset(20);
-                        anim.setRepeatMode(Animation.REVERSE);
-                        anim.setRepeatCount(Animation.INFINITE);
-                        ((MainActivity)getActivity()).getConfig().startAnimation(anim);
-                        DB.makeCustomToast(getActivity(),ok);
-                    }
-                }else{
-                    ok = "Non-valid values. Please fill again";
+                int totOk = totOK();
+                switch (totOk){
+                    case 0:
+                        if(DB.hasCars()){
+                            float total = calculateTotalCost();
+                            ok = round(total, 2) + "€ x Pers.";
+                            PriceDialog.getInstance(getContext()).showInform("Total Cost", ok);
+                        }else{
+                            ok = "Please setup a car!";
+                            DB.makeCustomToast(getActivity(),ok);
+                        }
+                        break;
+                    case 1:
+                        ok = "No origin setup";
+                        break;
+                    case 2:
+                        ok = "No destination setup";
+                        break;
+                    case 3:
+                        ok = "Please add number of passengers";
+                        break;
+                    case 4:
+                        ok = "Route has a total of 0km";
+                        break;
+                    case 5:
+                        ok = "Non valid passenger value";
+                        break;
+
+                }
+                if(totOk!=0){
                     DB.makeCustomToast(getActivity(),ok);
                 }
 
@@ -534,8 +547,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             if(origin!=null && destination!=null){
                 hideKeyboard(getActivity());
                 RouteManager.getInstance(this).getRouteHeader(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
-                drawRoute();
-                updateTotalTripCost();
+
             }
         }
 
@@ -568,18 +580,18 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         return totalKMCalculats/1000;
     }
 
-    private boolean totOK() {
-        boolean ok = true;
+    private int totOK() {
+        int ok = 0;
         if(origin==null){
-            ok = false;
+            ok = 1;
         }else if(destination==null){
-            ok = false;
+            ok = 2;
         }else if(totalPassengers.getText().toString().equals("") || totalPassengers.getText().toString().isEmpty()){
-            ok = false;
+            ok = 3;
         }else if(totalKMCalculats == 0){
-            ok = false;
+            ok = 4;
         }else if(Float.parseFloat(totalPassengers.getText().toString())<=0 || Float.parseFloat(totalPassengers.getText().toString())>=10){
-            ok = false;
+            ok = 5;
         }
 
         return ok;
@@ -708,6 +720,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             clearButtonDestination.setVisibility(View.GONE);
         }else{
             if(body.getTollCost().getCar()>0){
+                drawRoute();
+                updateTotalTripCost();
                 totalTollCost = body.getTollCost().getCar()/100;
                 DB.makeCustomToast(getActivity(),"This route has tolls");
                 tollSwitch.setVisibility(View.VISIBLE);

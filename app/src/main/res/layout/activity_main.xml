@@ -29,6 +29,34 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/settings"/>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true">
+            <ImageView
+                android:id="@+id/selectedVehicle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/white_car"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:id="@+id/selectedVehicleName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:text="Kia"
+                android:textStyle="bold"
+                android:textColor="#FAFAFA"
+                />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
 
@@ -78,7 +106,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 ads:adSize="BANNER"
-                ads:adUnitId="ca-app-pub-6805626204344763/6103387771">
+                ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
             </com.google.android.gms.ads.AdView>
             <!--
             MINE:

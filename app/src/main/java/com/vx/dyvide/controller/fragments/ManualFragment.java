@@ -79,18 +79,36 @@ public class ManualFragment  extends Fragment {
             @Override
             public void onClick(View v) {
                 String ok= "";
-                if(totOk()){
-                    if(DB.hasCars()){
-                        float total = calculateTotalCost();
-                        ok = round(total, 2) + "€ x Pers.";
-                        PriceDialog.getInstance(getContext()).showInform("Total Cost", ok);
-                    }else{
-                        ok = "Please setup a car!";
-                        DB.makeCustomToast(getActivity(), ok);
-                    }
+                int totOk = totOk();
+                switch (totOk){
+                    case 0:
+                        if(DB.hasCars()){
+                            float total = calculateTotalCost();
+                            ok = round(total, 2) + "€ x Pers.";
+                            PriceDialog.getInstance(getContext()).showInform("Total Cost", ok);
+                        }else{
+                            ok = "Please setup a car!";
+                            DB.makeCustomToast(getActivity(), ok);
+                        }
+                        break;
+                    case 1:
+                        ok = "Please add number of passengers";
+                        break;
+                    case 2:
+                        ok = "Please add total KM";
+                        break;
+                    case 3:
+                        ok = "Non valid KM value";
+                        break;
+                    case 4:
+                        ok = "Non valid passenger value";
+                        break;
+                    case 5:
+                        ok = "Non valid toll value";
+                        break;
 
-                }else{
-                    ok = "Non-valid values. Please fill again";
+                }
+                if(totOk!=0) {
                     DB.makeCustomToast(getActivity(), ok);
                 }
 
@@ -100,19 +118,19 @@ public class ManualFragment  extends Fragment {
         return view;
     }
 
-    private boolean totOk() {
-        boolean ok = true;
+    private int totOk() {
+        int ok = 0;
         if(totalPassengers.getText().toString().equals("")){
-            ok = false;
+            ok = 1;
         }else if(totalKM.getText().toString().equals("")){
-            ok = false;
+            ok = 2;
         }else if(Float.parseFloat(totalKM.getText().toString())<=0){
-            ok = false;
+            ok = 3;
         }else if(Float.parseFloat(totalPassengers.getText().toString())<=0 || Float.parseFloat(totalPassengers.getText().toString())>=10){
-            ok = false;
+            ok = 4;
         }else if(wantsTolls){
             if(Float.parseFloat(totalTolls.getText().toString())<=0){
-                ok = false;
+                ok = 5;
             }
         }
         return ok;

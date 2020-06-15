@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/vehicleItem"
     android:orientation="horizontal"
-    android:layout_width="100dp"
+    android:layout_width="90dp"
     android:layout_height="100dp"
     android:clickable="true"
     android:gravity="center_vertical">

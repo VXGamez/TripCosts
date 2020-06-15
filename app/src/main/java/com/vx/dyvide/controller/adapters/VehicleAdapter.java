@@ -58,14 +58,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                     mCallback.createNewVehicle();
                 }else{
                     mCallback.vehiclePressed(vehicles.get(position), position);
-                    Toast toast = Toast.makeText(mContext, vehicles.get(position).getName() + " selected!", Toast.LENGTH_SHORT);
-                    View view = toast.getView();
-                    view.getBackground().setColorFilter(Color.parseColor("#7ED31F"), PorterDuff.Mode.SRC_IN);
-                    TextView text = view.findViewById(android.R.id.message);
-                    text.setTextColor(Color.WHITE);
-                    text.setTypeface(text.getTypeface(), Typeface.BOLD);
-                    toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 570);
-                    toast.show();
                 }
             }
         });

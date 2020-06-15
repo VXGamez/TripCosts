@@ -3,6 +3,8 @@ package com.vx.dyvide.controller.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -47,6 +49,7 @@ public class OptionDialog {
     public void showConfirmationDialog(String message) {
         mDialog.setContentView(R.layout.dialog_option);
         mDialog.setCanceledOnTouchOutside(false);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         tvTitle = (TextView) mDialog.findViewById(R.id.dialog_title);
         tvSubtitle = (TextView) mDialog.findViewById(R.id.dialog_error_subtitle);
