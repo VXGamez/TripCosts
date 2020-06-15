@@ -57,7 +57,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
                 if(vehicles.get(position).getType()==-5){
                     mCallback.createNewVehicle();
                 }else{
-                    mCallback.vehiclePressed(vehicles.get(position), position);
+                    mCallback.vehiclePressed(vehicles.get(position), position, false);
                 }
             }
         });

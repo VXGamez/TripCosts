@@ -136,6 +136,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     private TextView totalTripCostTXT;
     private float totalTripCost;
 
+    private boolean infoRecieved=false;
+
     private Switch tollSwitch;
     private boolean wantsTolls;
     private LinearLayout tolls;
@@ -248,6 +250,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                     currentPolyline.remove();
                     currentPolyline=null;
                 }
+                resetValues();
                 originMarker.remove();
                 origin = null;
                 clearButtonOrigin.setVisibility(View.GONE);
@@ -304,6 +307,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             @Override
             public void onClick(View v) {
                 etTextInputD.setText("");
+                resetValues();
                 if(currentPolyline!=null){
                     currentPolyline.remove();
                     currentPolyline=null;
@@ -404,40 +408,43 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         calculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String ok = "";
-                int totOk = totOK();
-                switch (totOk){
-                    case 0:
-                        if(DB.hasCars()){
-                            float total = calculateTotalCost();
-                            ok = round(total, 2) + "€ x Pers.";
-                            PriceDialog.getInstance(getContext()).showInform("Total Cost", ok);
-                        }else{
-                            ok = "Please setup a car!";
-                            DB.makeCustomToast(getActivity(),ok);
-                        }
-                        break;
-                    case 1:
-                        ok = "No origin setup";
-                        break;
-                    case 2:
-                        ok = "No destination setup";
-                        break;
-                    case 3:
-                        ok = "Please add number of passengers";
-                        break;
-                    case 4:
-                        ok = "Route has a total of 0km";
-                        break;
-                    case 5:
-                        ok = "Non valid passenger value";
-                        break;
+                if(infoRecieved){
+                    String ok = "";
+                    int totOk = totOK();
+                    switch (totOk){
+                        case 0:
+                            if(DB.hasCars()){
+                                float total = calculateTotalCost();
+                                ok = round(total, 2) + "€ x Pers.";
+                                PriceDialog.getInstance(getContext()).showInform("Total Cost", ok);
+                            }else{
+                                ok = "Please setup a car!";
+                                DB.makeCustomToast(getActivity(),ok);
+                            }
+                            break;
+                        case 1:
+                            ok = "No origin setup";
+                            break;
+                        case 2:
+                            ok = "No destination setup";
+                            break;
+                        case 3:
+                            ok = "Please add number of passengers";
+                            break;
+                        case 4:
+                            ok = "Route has a total of 0km";
+                            break;
+                        case 5:
+                            ok = "Non valid passenger value";
+                            break;
 
+                    }
+                    if(totOk!=0){
+                        DB.makeCustomToast(getActivity(),ok);
+                    }
+                }else{
+                    ErrorDialog.getInstance(getActivity()).showErrorDialog("Waiting for route information");
                 }
-                if(totOk!=0){
-                    DB.makeCustomToast(getActivity(),ok);
-                }
-
             }
         });
 
@@ -475,6 +482,13 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         });
 
         return view;
+    }
+
+    private void resetValues() {
+        totalTollCost = 0.0;
+        totalKMCalculats=0;
+        totalKM.setText("Total distance: 0 km");
+        totalTripCostTXT.setText("Total trip cost: " + round(totalTripCost, 2) + "€");
     }
 
     private void setDestinationCurrentLocation() {
@@ -562,6 +576,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             map.animateCamera(cu);
             if(origin!=null && destination!=null){
                 hideKeyboard(getActivity());
+                infoRecieved = false;
                 RouteManager.getInstance(this).getRouteHeader(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
 
             }
@@ -791,7 +806,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                     tolls.add(((String)((ArrayList)parse.get(i)).get(7)));
                 }
             }
-
+            infoRecieved = true;
             makeRecycle(tolls);
         }
 

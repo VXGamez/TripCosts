@@ -142,7 +142,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
                 adding = false;
                 allCars.setAlpha((float) 1.0);
                 allCars.setEnabled(true);
-                vehiclePressed(DB.getVehicles().get(currentVehicle), currentVehicle);
+                vehiclePressed(DB.getVehicles().get(currentVehicle), currentVehicle, false);
             }
         });
         delete = findViewById(R.id.delete);
@@ -265,7 +265,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
             }else{
                 currentVehicle =  ObjectBox.get().boxFor(SavedConfig.class).get(1).getSelectedVehicle();
             }
-            vehiclePressed(DB.getVehicles().get(currentVehicle), currentVehicle);
+            vehiclePressed(DB.getVehicles().get(currentVehicle), currentVehicle, true);
         }else{
             cancel.setVisibility(View.GONE);
             newCar.setVisibility(View.VISIBLE);
@@ -291,7 +291,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
             newCar.setVisibility(View.GONE);
             cancel.setVisibility(View.VISIBLE);
             carInfo.setVisibility(View.VISIBLE);
-            vehiclePressed(DB.getVehicles().get(currentVehicle), currentVehicle);
+            vehiclePressed(DB.getVehicles().get(currentVehicle), currentVehicle, false);
         } else {
             newCar.setVisibility(View.VISIBLE);
             cancel.setVisibility(View.GONE);
@@ -364,9 +364,12 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
     }
 
     @Override
-    public void vehiclePressed(Vehicle vehicle, int position) {
+    public void vehiclePressed(Vehicle vehicle, int position, boolean starting) {
         if(!adding){
-            DB.makeCustomToast(this, vehicle.getName() + " selected!");
+            if(!starting){
+                DB.makeCustomToast(this, vehicle.getName() + " selected!");
+
+            }
             currentVehicle = position;
             SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
             c.setSelectedVehicle(currentVehicle);
