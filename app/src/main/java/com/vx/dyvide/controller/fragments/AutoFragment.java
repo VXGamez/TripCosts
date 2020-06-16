@@ -49,6 +49,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -87,6 +88,7 @@ import com.vx.dyvide.controller.adapters.TollAdapter;
 import com.vx.dyvide.controller.adapters.VehicleAdapter;
 import com.vx.dyvide.controller.callbacks.TollListCallback;
 import com.vx.dyvide.controller.dialogs.ErrorDialog;
+import com.vx.dyvide.controller.dialogs.LoadingDialog;
 import com.vx.dyvide.controller.dialogs.PriceDialog;
 import com.vx.dyvide.controller.restAPI.Michelin.callbacks.MichelinCallback;
 import com.vx.dyvide.controller.restAPI.Michelin.managers.RouteManager;
@@ -408,6 +410,9 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         calculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*MoreInfoFragment bottomSheetDialog = new MoreInfoFragment();
+                bottomSheetDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppBottomSheetDialogTheme);
+                bottomSheetDialog.show(getActivity().getSupportFragmentManager(), "playlist_info");*/
                 if(infoRecieved){
                     String ok = "";
                     int totOk = totOK();
@@ -577,8 +582,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             if(origin!=null && destination!=null){
                 hideKeyboard(getActivity());
                 infoRecieved = false;
+                LoadingDialog.getInstance(getActivity()).showLoadingDialog("Loading");
                 RouteManager.getInstance(this).getRouteHeader(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
-
             }
         }
 
@@ -807,6 +812,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 }
             }
             infoRecieved = true;
+            LoadingDialog.getInstance(getActivity()).cancelLoadingDialog();
             makeRecycle(tolls);
         }
 
