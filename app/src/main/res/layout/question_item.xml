@@ -22,7 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-
+        android:autoLink="web"
+        android:textColorLink="#7ED31F"
         android:fontFamily="@font/montserrat_regular"
         android:textColor="#000000"
         android:textStyle="normal"

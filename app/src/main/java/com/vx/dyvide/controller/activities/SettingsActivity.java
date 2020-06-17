@@ -10,11 +10,15 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +61,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
     private MultiStateToggleButton fuelType;
     private ImageButton chooseCar;
     private ImageButton chooseMoto;
+    private ImageButton options;
     private EditText vehicleName;
     private boolean adding=false;
     private EditText consum;
@@ -80,6 +85,29 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.lan_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Toast.makeText(this, "Selected Item: " +item.getTitle(), Toast.LENGTH_SHORT).show();
+        switch (item.getItemId()) {
+            case R.id.eng:
+                // do your code
+                return true;
+            case R.id.spa:
+                // do your code
+                return true;
+            case R.id.cat:
+                // do your code
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
@@ -94,6 +122,18 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
                 }else{
                     selectedFuel = value;
                 }
+            }
+        });
+
+        options = findViewById(R.id.optionsMenu);
+        options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(SettingsActivity.this,v);
+                popup.setOnMenuItemClickListener(SettingsActivity.this::onOptionsItemSelected);// to implement on click event on items of menu
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.lan_menu, popup.getMenu());
+                popup.show();
             }
         });
         fuelType.setColorRes(R.color.color_pressed, R.color.color_released);

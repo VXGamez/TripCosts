@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:5057457448532265647",
-      "lastPropertyId": "12:5029759172604270202",
+      "lastPropertyId": "13:3279600436552118703",
       "name": "SavedConfig",
       "properties": [
         {
@@ -30,6 +30,11 @@
           "name": "isOnboard",
           "type": 5,
           "flags": 4
+        },
+        {
+          "id": "13:3279600436552118703",
+          "name": "lan",
+          "type": 9
         }
       ],
       "relations": []

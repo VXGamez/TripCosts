@@ -1,22 +1,23 @@
 <resources>
     <string name="app_name">Dyvide</string>
     <string name="google_maps_key">AIzaSyB6M4VO_cNryZSJWeZdiFCWiRlDmI38EiQ</string>
-    <!--<string name="google_maps_key">AIzaSyBCF4eV_XDTWCUVghg-qq9jwToWTwwI2uI</string>-->
+
     <string-array name="fuel_types">
         <item>Diesel</item>
         <item>Gasoline</item>
         <item>Electric</item>
     </string-array>
 
-    <string name="demo_content">Lorem ipsum dolor sit amet, consectetur\n adipiscing elit. Vivamus sodales faucibus\n dapibus. Etiam mattis leo quis laoreet dictum.</string>
-    <string name="demo_title">Lorem Ipsum</string>
     <string name="next">Next</string>
     <string name="toll_content">"If your trip includes tolls, they can be added to the cost. You can always change this setting however you like"</string>
     <string name="more_info">Discover more content within the app! Not only are there more functionalities available, but much more to come!</string>
     <string name="dyvide_info">Calculate the cost of a trip with your car and divide it with your friends easily. Setup your personal preferences and easily calculate your vehicle expenses.</string>
     <string name="welcome_info">With dyvide your car expenses will no longer be a headache! Follow these instructions to see how dyvide can help you do so. </string>
     <string name="support">"Welcome to Dyvide Support. We hope you are just here out of curiosity and not need. But if you do indeed need help, keep reading. "</string>
-    <string name="supportMore">For any issues with the app please address: victorxirauguardans@gmail.com or press the button below and fill out the form with your issue. We hope we can resolve it as quick as possible so that it means no inconvenience to you</string>
+    <string name="supportMore">For any issues with the app please fill out the form with your issue. We hope we can resolve it as quick as possible so that it means no inconvenience to you</string>
     <string name="functionalities">If you don\'t have any issues you can still help anyway! If you have any ideas on how to improve the app, any kind: design-wise, funciontalities, whatever you might think might be useful for other users, is a valued contribution and we really appreciate it. You can make it through the contact form below. Don\'t forget though, we are always working on improving, some might already be on their way ;) </string>
+
+
+
 
 </resources>

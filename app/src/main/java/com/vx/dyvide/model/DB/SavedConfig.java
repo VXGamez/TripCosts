@@ -17,6 +17,23 @@ public class SavedConfig {
     public int selectedVehicle;
     public int isOnboard;
     public String vehicles;
+    public String lan;
+
+    public int getIsOnboard() {
+        return isOnboard;
+    }
+
+    public void setIsOnboard(int isOnboard) {
+        this.isOnboard = isOnboard;
+    }
+
+    public String getLan() {
+        return lan;
+    }
+
+    public void setLan(String lan) {
+        this.lan = lan;
+    }
 
     public int isOnboard() {
         return isOnboard;

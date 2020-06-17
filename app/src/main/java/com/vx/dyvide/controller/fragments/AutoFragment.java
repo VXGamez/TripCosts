@@ -413,7 +413,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 /*MoreInfoFragment bottomSheetDialog = new MoreInfoFragment();
                 bottomSheetDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppBottomSheetDialogTheme);
                 bottomSheetDialog.show(getActivity().getSupportFragmentManager(), "playlist_info");*/
-                if(infoRecieved){
                     String ok = "";
                     int totOk = totOK();
                     switch (totOk){
@@ -442,14 +441,15 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                         case 5:
                             ok = "Non valid passenger value";
                             break;
+                        case 6:
+                            ErrorDialog.getInstance(getActivity()).showErrorDialog("Waiting for route information");
+                            break;
 
                     }
-                    if(totOk!=0){
+                    if(totOk!=0 && totOk!=6){
                         DB.makeCustomToast(getActivity(),ok);
                     }
-                }else{
-                    ErrorDialog.getInstance(getActivity()).showErrorDialog("Waiting for route information");
-                }
+
             }
         });
 
@@ -628,6 +628,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             ok = 4;
         }else if(Float.parseFloat(totalPassengers.getText().toString())<=0 || Float.parseFloat(totalPassengers.getText().toString())>=10){
             ok = 5;
+        }else if(!infoRecieved){
+            ok = 6;
         }
 
         return ok;

@@ -83,6 +83,7 @@ public class DB {
         SavedConfig c = new SavedConfig();
         c.setId(1);
         c.setOnboard(0);
+        c.setLan("EN");
         c.selectedVehicle = -3;
         Vehicle v = new Vehicle(-5, "Add", 0, -3);
         ArrayList<Vehicle> array = new ArrayList<>();

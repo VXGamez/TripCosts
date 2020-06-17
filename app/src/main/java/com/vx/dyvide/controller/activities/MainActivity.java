@@ -22,6 +22,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -93,9 +95,13 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Intent intent = new Intent(this, ConnectivityService.class);
+        stopService(intent);
         unregisterReceiver(connectionLost);
         unregisterReceiver(connectionRegained);
     }
+
+
 
     @Override
     protected void onResume() {
