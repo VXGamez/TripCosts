@@ -61,6 +61,26 @@ public class ErrorDialog {
     public void showInform(String title, String message) {
         mDialog.setContentView(R.layout.dialog_error);
         mDialog.setCanceledOnTouchOutside(false);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        tvTitle = (TextView) mDialog.findViewById(R.id.dialog_error_title);
+        tvTitle.setText(title);
+        tvSubtitle = (TextView) mDialog.findViewById(R.id.dialog_error_subtitle);
+        tvSubtitle.setText(message);
+
+        btnAccept = (Button) mDialog.findViewById(R.id.dialog_error_button);
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.cancel();
+            }
+        });
+        mDialog.show();
+    }
+
+    public void showLanguageChange(String title, String message) {
+        mDialog.setContentView(R.layout.dialog_error);
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         tvTitle = (TextView) mDialog.findViewById(R.id.dialog_error_title);
         tvTitle.setText(title);
@@ -72,6 +92,7 @@ public class ErrorDialog {
             @Override
             public void onClick(View v) {
                 mDialog.cancel();
+                System.exit(0);
             }
         });
         mDialog.show();

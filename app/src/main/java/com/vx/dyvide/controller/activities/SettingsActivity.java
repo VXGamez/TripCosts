@@ -1,13 +1,17 @@
 package com.vx.dyvide.controller.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -31,16 +35,20 @@ import com.vx.dyvide.R;
 import com.vx.dyvide.controller.adapters.VehicleAdapter;
 import com.vx.dyvide.controller.callbacks.DialogCallback;
 import com.vx.dyvide.controller.callbacks.VehicleCallback;
+import com.vx.dyvide.controller.dialogs.ErrorDialog;
 import com.vx.dyvide.controller.dialogs.OptionDialog;
 import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
 import com.vx.dyvide.model.DB.SavedConfig;
+import com.vx.dyvide.model.LocaleHelper;
 import com.vx.dyvide.model.Vehicle;
 
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 import org.honorato.multistatetogglebutton.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Set;
 
 import io.objectbox.android.AndroidObjectBrowser;
 
@@ -91,25 +99,32 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Toast.makeText(this, "Selected Item: " +item.getTitle(), Toast.LENGTH_SHORT).show();
+        SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
+        ErrorDialog.getInstance(SettingsActivity.this).showLanguageChange("Language", "The app will restart to apply changes.");
         switch (item.getItemId()) {
             case R.id.eng:
-                // do your code
+                c.setLan("en");
+                ObjectBox.get().boxFor(SavedConfig.class).put(c);
                 return true;
             case R.id.spa:
-                // do your code
+                c.setLan("es");
+                ObjectBox.get().boxFor(SavedConfig.class).put(c);
                 return true;
             case R.id.cat:
-                // do your code
+                c.setLan("ca");
+                ObjectBox.get().boxFor(SavedConfig.class).put(c);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DB.setLanguage(this);
         setContentView(R.layout.activity_settings);
 
         fuelType = (MultiStateToggleButton) this.findViewById(R.id.mstb_multi_id);

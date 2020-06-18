@@ -54,6 +54,7 @@ import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
 import com.vx.dyvide.model.DB.SavedConfig;
 import com.vx.dyvide.model.HERE.PriceResponse;
+import com.vx.dyvide.model.LocaleHelper;
 import com.vx.dyvide.model.Michelin.Iti;
 import com.vx.dyvide.model.Michelin.ItiRoadsheet;
 import com.vx.dyvide.model.Michelin.RoadSheet;
@@ -89,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     private TextView currentName;
 
     private FragmentPagerAdapter adapterViewPager;
-
-
 
     @Override
     protected void onDestroy() {
@@ -174,13 +173,16 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         ObjectBox.init(getApplicationContext());
+        DB.setLanguage(this);
+        setContentView(R.layout.activity_main);
+
         getScreenSize();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         Intent intent = new Intent(this, ConnectivityService.class);
         startService(intent);
+
 
         currentImage = findViewById(R.id.selectedVehicle);
         currentName = findViewById(R.id.selectedVehicleName);
@@ -218,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
         });
 
         mAdView = findViewById(R.id.adView);
+
 
         if(!DB.hasConfig()){
             DB.createConfig();

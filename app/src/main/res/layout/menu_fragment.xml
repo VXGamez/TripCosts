@@ -34,7 +34,7 @@
                 android:clickable="true"
                 android:fontFamily="@font/montserrat_semibold"
                 android:textSize="18dp"
-                android:text="Auto Route"/>
+                android:text="@string/auto_route"/>
             <TextView
                 android:id="@+id/manualRoute"
                 android:layout_width="match_parent"
@@ -46,7 +46,7 @@
                 android:textColor="#000000"
                 android:fontFamily="@font/montserrat_semibold"
                 android:textSize="18dp"
-                android:text="Manual"/>
+                android:text="@string/manual"/>
             <TextView
                 android:id="@+id/support"
                 android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                 android:textColor="#000000"
                 android:fontFamily="@font/montserrat_semibold"
                 android:textSize="18dp"
-                android:text="Support"/>
+                android:text="@string/support_menu"/>
         </LinearLayout>
 
         <RelativeLayout

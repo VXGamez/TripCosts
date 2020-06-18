@@ -2,6 +2,8 @@ package com.vx.dyvide.controller.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -47,6 +49,7 @@ public class LoadingDialog {
     public void showLoadingDialog(String message) {
         mDialog.setContentView(R.layout.dialog_loading);
         mDialog.setCanceledOnTouchOutside(false);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mDialog.show();
     }
 

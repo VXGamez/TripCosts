@@ -1,12 +1,16 @@
 package com.vx.dyvide.model.DB;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -16,6 +20,7 @@ import com.vx.dyvide.model.Vehicle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class DB {
 
@@ -91,9 +96,31 @@ public class DB {
         c.saveVehicles(array);
         ObjectBox.get().boxFor(SavedConfig.class).put(c);
     }
+    public static void setAppLocale(Context c, String localeCode){
+        Resources resources = c.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration config = resources.getConfiguration();
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR1){
+            config.setLocale(new Locale(localeCode.toLowerCase()));
+        } else {
+            config.locale = new Locale(localeCode.toLowerCase());
+        }
+        resources.updateConfiguration(config, dm);
+    }
 
     public static boolean isOnboard() {
         int on = ObjectBox.get().boxFor(SavedConfig.class).get(1).isOnboard;
         return on==1;
+    }
+
+    public static void setLanguage(Context x) {
+        String lan = "";
+        if(hasConfig()){
+            SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
+            lan = c.lan;
+        }else{
+            lan = "en";
+        }
+        DB.setAppLocale(x, lan);
     }
 }

@@ -1,14 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Dyvide</string>
-    <string name="google_maps_key" translatable="false">AIzaSyB6M4VO_cNryZSJWeZdiFCWiRlDmI38EiQ</string>
+    <string name="app_name">Dyvide</string>
+    <string name="google_maps_key">AIzaSyB6M4VO_cNryZSJWeZdiFCWiRlDmI38EiQ</string>
 
     <string-array name="fuel_types">
         <item>Diesel</item>
-        <item>Gasoline</item>
-        <item>Electric</item>
+        <item>Gasolina</item>
+        <item>Electrico</item>
     </string-array>
 
-    <string name="next">Next</string>
+    <string name="next">Siguiente</string>
     <string name="toll_content">"If your trip includes tolls, they can be added to the cost. You can always change this setting however you like"</string>
     <string name="more_info">Discover more content within the app! Not only are there more functionalities available, but much more to come!</string>
     <string name="dyvide_info">Calculate the cost of a trip with your car and divide it with your friends easily. Setup your personal preferences and easily calculate your vehicle expenses.</string>
@@ -16,19 +17,19 @@
     <string name="support">"Welcome to Dyvide Support. We hope you are just here out of curiosity and not need. But if you do indeed need help, keep reading. "</string>
     <string name="supportMore">For any issues with the app please fill out the form with your issue. We hope we can resolve it as quick as possible so that it means no inconvenience to you</string>
     <string name="functionalities">If you don\'t have any issues you can still help anyway! If you have any ideas on how to improve the app, any kind: design-wise, funciontalities, whatever you might think might be useful for other users, is a valued contribution and we really appreciate it. You can make it through the contact form below. Don\'t forget though, we are always working on improving, some might already be on their way ;) </string>
-    <string name="add_a_new_vehicle">Add a New Vehicle</string>
-    <string name="choose_vehicle_type">Choose vehicle type:</string>
-    <string name="consumption_every_100kmAdd">Consumption every 100km:</string>
-    <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
-    <string name="vehicle_name">Vehicle Name:</string>
-    <string name="consumption_every_100km">Consumption every 100km:</string>
-    <string name="update">Update</string>
-    <string name="delete">Delete</string>
-    <string name="vehicle_nameAdd">Vehicle Name:</string>
-    <string name="auto_route">Auto Route</string>
+    <string name="add_a_new_vehicle">Añadir nuevo Vehiculo</string>
+    <string name="choose_vehicle_type">Elige tipo de vehiculo:</string>
+    <string name="vehicle_nameAdd">Nombre del Vehiculo:</string>
+    <string name="consumption_every_100kmAdd">Consumo cada 100km:</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="vehicle_name">Nombre del Vehiculo:</string>
+    <string name="consumption_every_100km">Consumo cada 100km:</string>
+    <string name="update">Actualizar</string>
+    <string name="delete">Eliminar</string>
+    <string name="auto_route">Auto Ruta</string>
     <string name="manual">Manual</string>
-    <string name="support_menu">Support</string>
+    <string name="support_menu">Soporte</string>
 
 
 </resources>

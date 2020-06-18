@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Dyvide</string>
-    <string name="google_maps_key" translatable="false">AIzaSyB6M4VO_cNryZSJWeZdiFCWiRlDmI38EiQ</string>
+    <string name="app_name">Dyvide</string>
+    <string name="google_maps_key">AIzaSyB6M4VO_cNryZSJWeZdiFCWiRlDmI38EiQ</string>
 
     <string-array name="fuel_types">
         <item>Diesel</item>
@@ -18,14 +19,14 @@
     <string name="functionalities">If you don\'t have any issues you can still help anyway! If you have any ideas on how to improve the app, any kind: design-wise, funciontalities, whatever you might think might be useful for other users, is a valued contribution and we really appreciate it. You can make it through the contact form below. Don\'t forget though, we are always working on improving, some might already be on their way ;) </string>
     <string name="add_a_new_vehicle">Add a New Vehicle</string>
     <string name="choose_vehicle_type">Choose vehicle type:</string>
-    <string name="consumption_every_100kmAdd">Consumption every 100km:</string>
-    <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
     <string name="vehicle_name">Vehicle Name:</string>
     <string name="consumption_every_100km">Consumption every 100km:</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="vehicle_nameAdd">Vehicle Name:</string>
+    <string name="consumption_every_100kmAdd">Consumption every 100km:</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
-    <string name="vehicle_nameAdd">Vehicle Name:</string>
     <string name="auto_route">Auto Route</string>
     <string name="manual">Manual</string>
     <string name="support_menu">Support</string>
