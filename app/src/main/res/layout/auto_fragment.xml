@@ -129,7 +129,7 @@
                     android:textColor="#000000"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:text="Total trip cost: 0.0€"/>
+                    android:text="@string/total_trip_cost_0_0"/>
 
             </RelativeLayout>
 
@@ -145,7 +145,7 @@
                 android:layout_gravity="center_horizontal"
                 android:textColor="#000000"
                 android:textSize="18sp"
-                android:text="Total KM: 0"/>
+                android:text="@string/totalKMInit"/>
 
             <TextView
                 android:layout_width="200dp"
@@ -157,7 +157,7 @@
                 android:textColor="#000000"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:text="To divide between: "/>
+                android:text="@string/to_divide_between"/>
 
             <EditText
                 android:id="@+id/totalPassengers"
@@ -167,7 +167,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:backgroundTint="@color/colorPrimary"
                 android:layout_height="40dp"
-                android:hint="Total passengers"
+                android:hint="@string/total_passengers"
                 android:inputType="numberDecimal"/>
 
             <Switch
@@ -175,7 +175,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:theme="@style/SwitchCompatTheme"
-                android:text="Include tolls: "
+                android:text="@string/include_tolls"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/montserrat_semibold"
@@ -202,7 +202,7 @@
                     android:fontFamily="@font/montserrat_semibold"
                     android:layout_marginBottom="10dp"
                     android:textStyle="bold"
-                    android:text="Total toll cost: 0.0€"/>
+                    android:text="@string/total_toll_cost_0_0"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -213,7 +213,7 @@
                     android:textColor="#000000"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:text="Choose what tolls to include in total"/>
+                    android:text="@string/choose_what_tolls_to_include_in_total"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -246,7 +246,7 @@
             android:id="@+id/calculate"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:text="Calculate"
+            android:text="@string/calculate"
             android:layout_marginBottom="80dp"
             android:fontFamily="@font/montserrat_semibold"
             android:textStyle="bold"
@@ -263,7 +263,7 @@
             android:layout_gravity="center_horizontal"
             android:textColor="#959595"
             android:textSize="15sp"
-            android:text="Please use euros as units"/>
+            android:text="@string/please_use_euros_as_units"/>
     </RelativeLayout>
 
 </FrameLayout>

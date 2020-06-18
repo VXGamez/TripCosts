@@ -93,7 +93,7 @@
         android:background="@drawable/onboarding_activity_button_2"
         android:fontFamily="@font/montserrat_semibold"
         android:onClick="nextPage"
-        android:text="Next"
+        android:text="@string/next"
         android:textColor="#58A600"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -10,20 +10,13 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -31,42 +24,25 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.vx.dyvide.R;
 import com.vx.dyvide.controller.fragments.AutoFragment;
 import com.vx.dyvide.controller.fragments.ManualFragment;
 import com.vx.dyvide.controller.fragments.SupportFragment;
 import com.vx.dyvide.controller.onboarding.OnboardingActivity;
 import com.vx.dyvide.controller.restAPI.HERE.callbacks.HereCallback;
-import com.vx.dyvide.controller.restAPI.Michelin.callbacks.MichelinCallback;
-import com.vx.dyvide.controller.restAPI.Michelin.managers.RouteManager;
 import com.vx.dyvide.controller.service.ConnectivityService;
 import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
 import com.vx.dyvide.model.DB.SavedConfig;
 import com.vx.dyvide.model.HERE.PriceResponse;
-import com.vx.dyvide.model.LocaleHelper;
-import com.vx.dyvide.model.Michelin.Iti;
-import com.vx.dyvide.model.Michelin.ItiRoadsheet;
-import com.vx.dyvide.model.Michelin.RoadSheet;
-import com.vx.dyvide.model.Michelin.Summary;
 import com.vx.dyvide.model.Vehicle;
 
-import java.util.ArrayList;
-
-import retrofit2.Response;
-
-import static com.vx.dyvide.controller.fragments.AutoFragment.autocompleteDestination;
-import static com.vx.dyvide.controller.fragments.AutoFragment.autocompleteOrigin;
 
 public class MainActivity extends AppCompatActivity implements HereCallback {
 
@@ -79,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
     private static int width;
     private boolean inicialized = false;
     private boolean hasInternet = true;
-    private boolean needsOnboard = true;
     private Fragment menu;
     private ViewPager vpPager;
     private AdView mAdView;
@@ -122,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
            }else if(current.getType()==2){
                currentImage.setBackgroundResource(R.drawable.ic_moto);
            }
-           currentName.setText("Selected: \n" + current.getName());
+           currentName.setText(getString(R.string.selectedVehicle) + " \n" + current.getName());
        }else{
            currentLayout.setVisibility(View.INVISIBLE);
        }
@@ -203,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
                         springAnimation.animateToFinalPosition(20);
                     }else{
                         vpPager.setCurrentItem(1);
-                        DB.makeCustomToast(getApplication(), "Not available without internet");
+                        DB.makeCustomToast(getApplication(), getString(R.string.notWithoutInternet));
                     }
                 }else if(position==1){
                     springAnimation.animateToFinalPosition(20+(width/3));
@@ -232,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
                 Intent intent2 = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(intent2);
                 overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
-                DB.makeCustomToast(this, "Please setup a vehicle");
+                DB.makeCustomToast(this, getString(R.string.setupVehicle));
             }
         }
 
@@ -247,8 +222,6 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
                 overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
             }
         });
-
-
 
         registerConnectionRegained();
         registerConnectionLost();
@@ -268,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements HereCallback {
                 if(hasInternet){
                     initAuto();
                 }else{
-                    DB.makeCustomToast(MainActivity.this,"Not available without internet");
+                    DB.makeCustomToast(MainActivity.this,getString(R.string.notWithoutInternet));
                 }
             }
         });

@@ -85,26 +85,26 @@ public class ManualFragment  extends Fragment {
                         if(DB.hasCars()){
                             float total = calculateTotalCost();
                             ok = round(total, 2) + "€ x Pers.";
-                            PriceDialog.getInstance(getContext()).showInform("Total Cost", ok);
+                            PriceDialog.getInstance(getContext()).showInform(getString(R.string.totalCost), ok);
                         }else{
-                            ok = "Please setup a car!";
+                            ok = getString(R.string.setupVehicle);
                             DB.makeCustomToast(getActivity(), ok);
                         }
                         break;
                     case 1:
-                        ok = "Please add number of passengers";
+                        ok = getString(R.string.addPassengers);
                         break;
                     case 2:
-                        ok = "Please add total KM";
+                        ok = getString(R.string.addTotalKM);
                         break;
                     case 3:
-                        ok = "Non valid KM value";
+                        ok = getString(R.string.nonValidKM);
                         break;
                     case 4:
-                        ok = "Non valid passenger value";
+                        ok = getString(R.string.nonValidPassengers);
                         break;
                     case 5:
-                        ok = "Non valid toll value";
+                        ok = getString(R.string.nonValidToll);
                         break;
 
                 }

@@ -187,7 +187,7 @@
                     android:layout_marginLeft="80dp"
                     android:layout_width="250dp"
                     android:fontFamily="@font/montserrat_regular"
-                    android:hint="vehicle name"
+                    android:hint="@string/vehicle_nameAdd"
                     android:backgroundTint="@color/colorPrimary"
                     android:layout_height="40dp"
                     android:inputType="text" />
@@ -210,7 +210,7 @@
                     android:layout_width="250dp"
                     android:layout_height="40dp"
                     android:backgroundTint="@color/colorPrimary"
-                    android:hint="consumption (l/100km)"
+                    android:hint="@string/consumption_l_100km"
                     android:fontFamily="@font/montserrat_regular"
                     android:inputType="numberDecimal"/>
 
@@ -279,7 +279,7 @@
                     android:id="@+id/editCarName"
                     android:layout_marginLeft="80dp"
                     android:layout_width="250dp"
-                    android:hint="vehicle name"
+                    android:hint="@string/vehicle_name"
                     android:fontFamily="@font/montserrat_regular"
                     android:backgroundTint="@color/colorPrimary"
                     android:layout_height="40dp"
@@ -304,7 +304,7 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:backgroundTint="@color/colorPrimary"
                     android:layout_height="40dp"
-                    android:hint="consumption"
+                    android:hint="@string/consumption"
                     android:inputType="numberDecimal"/>
 
                 <Button

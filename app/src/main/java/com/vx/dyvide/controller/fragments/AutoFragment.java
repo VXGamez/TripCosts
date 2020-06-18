@@ -1,37 +1,22 @@
 package com.vx.dyvide.controller.fragments;
 
 import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -39,22 +24,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.common.ErrorDialogFragment;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -63,7 +44,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -74,18 +54,11 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.vx.dyvide.R;
-import com.vx.dyvide.controller.activities.MainActivity;
 import com.vx.dyvide.controller.adapters.TollAdapter;
-import com.vx.dyvide.controller.adapters.VehicleAdapter;
 import com.vx.dyvide.controller.callbacks.TollListCallback;
 import com.vx.dyvide.controller.dialogs.ErrorDialog;
 import com.vx.dyvide.controller.dialogs.LoadingDialog;
@@ -98,14 +71,8 @@ import com.vx.dyvide.model.DB.SavedConfig;
 import com.vx.dyvide.model.HERE.directionhelpers.FetchURL;
 import com.vx.dyvide.model.HERE.directionhelpers.TaskLoadedCallback;
 import com.vx.dyvide.model.Michelin.Summary;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 import static com.vx.dyvide.controller.fragments.ManualFragment.round;
 
 public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLoadedCallback, MichelinCallback, TollListCallback {
@@ -223,7 +190,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         View fView = autocompleteOrigin.getView();
         EditText etTextInput = fView.findViewById(R.id.places_autocomplete_search_input);
         etTextInput.setTextColor(Color.WHITE);
-        etTextInput.setHint("Origin");
+        etTextInput.setHint(getString(R.string.origin));
         etTextInput.setBackgroundResource(R.drawable.textfield);
         etTextInput.setHintTextColor(Color.WHITE);
         etTextInput.setTextSize(12.5f);
@@ -284,7 +251,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         View fViewD = autocompleteDestination.getView();
         EditText etTextInputD = fViewD.findViewById(R.id.places_autocomplete_search_input);
         etTextInputD.setTextColor(Color.WHITE);
-        etTextInputD.setHint("Destination");
+        etTextInputD.setHint(getString(R.string.destination));
         etTextInputD.setBackgroundResource(R.drawable.textfield);
         etTextInputD.setHintTextColor(Color.WHITE);
         etTextInputD.setTextSize(12.5f);
@@ -370,14 +337,14 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             @Override
             public void onClick(View v) {
                 if(destination==null && origin ==null) {
-                    DB.makeCustomToast(getActivity(),"Please setup origin or destination first");
+                    DB.makeCustomToast(getActivity(),getString(R.string.setupOriginDestination));
                 }else{
                     swapDestinations();
                 }
             }
         });
 
-        totalKM.setText("Total distance: 0 km");
+        totalKM.setText(getString(R.string.totalDistance)+": 0 km");
         totalPassengers = view.findViewById(R.id.totalPassengers);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
@@ -389,7 +356,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 if(DB.isLocationEnabled(getActivity())){
                     setOriginCurrentLocation();
                 }else{
-                    ErrorDialog.getInstance(getActivity()).showErrorDialog("Location not enabled.");
+                    ErrorDialog.getInstance(getActivity()).showErrorDialog(getString(R.string.locationNotEnabled));
                 }
             }
         });
@@ -400,7 +367,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 if(DB.isLocationEnabled(getActivity())){
                     setDestinationCurrentLocation();
                 }else{
-                    ErrorDialog.getInstance(getActivity()).showErrorDialog("Location not enabled.");
+                    ErrorDialog.getInstance(getActivity()).showErrorDialog(getString(R.string.locationNotEnabled));
                 }
             }
         });
@@ -410,9 +377,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         calculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*MoreInfoFragment bottomSheetDialog = new MoreInfoFragment();
-                bottomSheetDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.AppBottomSheetDialogTheme);
-                bottomSheetDialog.show(getActivity().getSupportFragmentManager(), "playlist_info");*/
                     String ok = "";
                     int totOk = totOK();
                     switch (totOk){
@@ -420,29 +384,29 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                             if(DB.hasCars()){
                                 float total = calculateTotalCost();
                                 ok = round(total, 2) + "€ x Pers.";
-                                PriceDialog.getInstance(getContext()).showInform("Total Cost", ok);
+                                PriceDialog.getInstance(getContext()).showInform(getString(R.string.totalCost), ok);
                             }else{
-                                ok = "Please setup a car!";
+                                ok = getString(R.string.setupVehicle);
                                 DB.makeCustomToast(getActivity(),ok);
                             }
                             break;
                         case 1:
-                            ok = "No origin setup";
+                            ok = getString(R.string.noOrigin);
                             break;
                         case 2:
-                            ok = "No destination setup";
+                            ok = getString(R.string.noDestination);
                             break;
                         case 3:
-                            ok = "Please add number of passengers";
+                            ok = getString(R.string.addPassengers);
                             break;
                         case 4:
-                            ok = "Route has a total of 0km";
+                            ok = getString(R.string.routeTooShort);
                             break;
                         case 5:
-                            ok = "Non valid passenger value";
+                            ok = getString(R.string.nonValidPassengers);
                             break;
                         case 6:
-                            ErrorDialog.getInstance(getActivity()).showErrorDialog("Waiting for route information");
+                            ErrorDialog.getInstance(getActivity()).showErrorDialog(getString(R.string.waitingInfo));
                             break;
 
                     }
@@ -492,8 +456,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     private void resetValues() {
         totalTollCost = 0.0;
         totalKMCalculats=0;
-        totalKM.setText("Total distance: 0 km");
-        totalTripCostTXT.setText("Total trip cost: " + round(totalTripCost, 2) + "€");
+        totalKM.setText(getString(R.string.totalDistance)+": 0 km");
+        totalTripCostTXT.setText(getString(R.string.totalTripCost)+": " + round(totalTripCost, 2) + "€");
     }
 
     private void setDestinationCurrentLocation() {
@@ -505,14 +469,14 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             public void onSuccess(Location location) {
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                 if(origin!=null && (location.getLatitude() == origin.latitude && location.getLongitude() == origin.longitude) ){
-                    DB.makeCustomToast(getActivity(),"Origin and destination cannot be the same");
+                    DB.makeCustomToast(getActivity(),getString(R.string.originEqualsDestin));
                 }else{
                     if(destinationMarker!=null){
                         destinationMarker.remove();
                         destinationMarker = null;
                     }
                     destination = loc;
-                    autocompleteDestination.setText("My Location");
+                    autocompleteDestination.setText(getString(R.string.currentLocation));
                     destinationMarker = map.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_dpin))));
                     updateMapZoom();
                 }
@@ -535,14 +499,14 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             public void onSuccess(Location location) {
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                 if(destination!=null && (location.getLatitude() == destination.latitude && location.getLongitude() == destination.longitude) ){
-                    DB.makeCustomToast(getActivity(),"Origin and destination cannot be the same");
+                    DB.makeCustomToast(getActivity(),getString(R.string.originEqualsDestin));
                 }else{
                     if(originMarker!=null){
                         originMarker.remove();
                         originMarker = null;
                     }
                     origin = loc;
-                    autocompleteOrigin.setText("My Location");
+                    autocompleteOrigin.setText(getString(R.string.currentLocation));
                     originMarker = map.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_opin))));
                     updateMapZoom();
                 }
@@ -582,7 +546,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             if(origin!=null && destination!=null){
                 hideKeyboard(getActivity());
                 infoRecieved = false;
-                LoadingDialog.getInstance(getActivity()).showLoadingDialog("Loading");
+                LoadingDialog.getInstance(getActivity()).showLoadingDialog(getString(R.string.loading));
                 RouteManager.getInstance(this).getRouteHeader(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
             }
         }
@@ -636,7 +600,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     }
 
     private void updateTotalTripCost() {
-        totalTripCostTXT.setText("Total trip cost: " + round(totalTripCost, 2) + "€");
+        totalTripCostTXT.setText(getString(R.string.totalTripCost)+": " + round(totalTripCost, 2) + "€");
     }
 
     private void makeRecycle(ArrayList<String> tolls){
@@ -708,7 +672,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     private void drawRoute() {
         if(origin == destination){
-            DB.makeCustomToast(getActivity(),"Origin and destination cannot be the same");
+            DB.makeCustomToast(getActivity(),getString(R.string.originEqualsDestin));
         }else{
             new FetchURL(this).execute(getUrl(origin, destination, "driving"), "driving");
         }
@@ -733,7 +697,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     @Override
     public void totalValues(String totalKM, int totalDistanceValue, String totalDuration, int totalDurationValue) {
-        this.totalKM.setText("Total distance: " + totalKM);
+        this.totalKM.setText(getString(R.string.totalDistance) + ": " + totalKM);
         this.totalKMCalculats = totalDistanceValue;
         float fuelCost = 0;
         float fuelType = DB.getVehicles().get(ObjectBox.get().boxFor(SavedConfig.class).get(1).selectedVehicle).getFuel();
@@ -754,7 +718,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     @Override
     public void onHeaderRecieved(Summary body) {
         if(body.getTollCost()==null && body.getTotalDist()==-.1){
-            DB.makeCustomToast(getActivity(),"No route for these coordinates.");
+            DB.makeCustomToast(getActivity(),getString(R.string.noRoute));
             map.clear();
             autocompleteOrigin.setText("");
             autocompleteDestination.setText("");
@@ -765,9 +729,9 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 drawRoute();
                 updateTotalTripCost();
                 totalTollCost = body.getTollCost().getCar()/100;
-                DB.makeCustomToast(getActivity(),"This route has tolls");
+                DB.makeCustomToast(getActivity(),getString(R.string.routeHasTolls));
                 tollSwitch.setVisibility(View.VISIBLE);
-                totalTollCostTXT.setText("Total toll cost: " + totalTollCost +"€");
+                totalTollCostTXT.setText(getString(R.string.totalTollCost) + ": " + totalTollCost +"€");
                 updateTotalTripCost();
                 RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
             }
@@ -786,12 +750,12 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     @Override
     public void onHeaderFailure(Throwable throwable) {
-        ErrorDialog.getInstance(getActivity()).showErrorDialog("App failure. Please restart the app");
+        ErrorDialog.getInstance(getActivity()).showErrorDialog(getString(R.string.failure));
     }
 
     @Override
     public void onFailure(Throwable throwable) {
-        ErrorDialog.getInstance(getActivity()).showErrorDialog("App failure. Please restart the app");
+        ErrorDialog.getInstance(getActivity()).showErrorDialog(getString(R.string.failure));
     }
 
     @Override
@@ -799,7 +763,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         ArrayList<String> tolls = new ArrayList<>();
 
         if(parse.get(0).equals("ERROR")){
-            DB.makeCustomToast(getActivity(),"No route for these coordinates.");
+            DB.makeCustomToast(getActivity(),getString(R.string.noRoute));
             map.clear();
             autocompleteOrigin.setText("");
             autocompleteDestination.setText("");
@@ -822,7 +786,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
 
     @Override
     public void onRoadSheetFailure(Throwable throwable) {
-        ErrorDialog.getInstance(getActivity()).showErrorDialog("App failure. Please restart the app");
+        ErrorDialog.getInstance(getActivity()).showErrorDialog(getString(R.string.failure));
     }
 
     @Override
@@ -839,7 +803,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         }else{
             totalTollCost-=cost;
         }
-        totalTollCostTXT.setText("Total toll cost: " + round(totalTollCost, 2) + "€");
+        totalTollCostTXT.setText(getString(R.string.totalTollCost)+ ": " + round(totalTollCost, 2) + "€");
     }
 
 }

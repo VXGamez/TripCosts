@@ -85,7 +85,7 @@
         android:background="@drawable/onboarding_activity_button_1"
         android:fontFamily="@font/montserrat_semibold"
         android:onClick="nextPage"
-        android:text="Next"
+        android:text="@string/next"
         android:textColor="#58A600"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -100,13 +100,13 @@
         android:layout_marginTop="4dp"
         android:textAlignment="center"
         android:fontFamily="@font/montserrat_semibold"
-        android:text="Tolls are included!"
+        android:text="@string/tolls_are_included"
         android:textColor="#FFFFFF"
         android:textSize="32sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/guideline7"
-        tools:text="Tolls are included!" />
+        tools:text="@string/tolls_are_included" />
 
     <TextView
         android:id="@+id/textView8"

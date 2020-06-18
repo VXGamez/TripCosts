@@ -1,19 +1,8 @@
 package com.vx.dyvide.controller.activities;
 
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
-import android.media.Image;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,10 +13,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,7 +27,6 @@ import com.vx.dyvide.controller.dialogs.OptionDialog;
 import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
 import com.vx.dyvide.model.DB.SavedConfig;
-import com.vx.dyvide.model.LocaleHelper;
 import com.vx.dyvide.model.Vehicle;
 
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
@@ -100,7 +86,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);
-        ErrorDialog.getInstance(SettingsActivity.this).showLanguageChange("Language", "The app will restart to apply changes.");
+        ErrorDialog.getInstance(SettingsActivity.this).showLanguageChange(getString(R.string.language_dialog_title), getString(R.string.restart_for_changes));
         switch (item.getItemId()) {
             case R.id.eng:
                 c.setLan("en");
@@ -133,7 +119,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
             public void onValueChanged(int value) {
                 if(value==2){
                     fuelType.setValue(-1);
-                    DB.makeCustomToast(SettingsActivity.this, "Not available yet");
+                    DB.makeCustomToast(SettingsActivity.this, getString(R.string.notAvailable));
                 }else{
                     selectedFuel = value;
                 }
@@ -185,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
                 c.saveVehicles(vehiculoh);
                 ObjectBox.get().boxFor(SavedConfig.class).put(c);
                 reload();
-                DB.makeCustomToast(SettingsActivity.this, "Vehicle updated");
+                DB.makeCustomToast(SettingsActivity.this, getString(R.string.vehicleUpdated));
             }
         });
 
@@ -206,7 +192,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
             @Override
             public void onClick(View v) {
                 dialog = new OptionDialog(SettingsActivity.this);
-                dialog.showConfirmationDialog("Are you sure you want to delete this vehicle?");
+                dialog.showConfirmationDialog(getString(R.string.deleteConfirmation));
             }
         });
         newCar = findViewById(R.id.newCar);
@@ -229,19 +215,19 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
                         allCars.setEnabled(true);
                         break;
                     case 1:
-                        message = "Please select your vehicle type";
+                        message = getString(R.string.select_vehicleType);
                         break;
                     case 2:
-                        message = "Please add a name to your vehicle";
+                        message = getString(R.string.addName_vehicle);
                         break;
                     case 3:
-                        message = "Please add consumption to your vehicle";
+                        message = getString(R.string.addConsumption_vehicle);
                         break;
                     case 4:
-                        message = "Please select a fuel type";
+                        message = getString(R.string.select_fuelType);
                         break;
                     case 5:
-                        message = "Vehicle name is too long!";
+                        message = getString(R.string.nameTooLong);
                         break;
 
                 }
@@ -256,7 +242,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         chooseCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type.setText("Car");
+                type.setText(getString(R.string.car));
             }
         });
         chooseMoto = findViewById(R.id.triaMoto);
@@ -264,7 +250,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         chooseMoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type.setText("Motorcycle");
+                type.setText(getString(R.string.motorcycle));
             }
         });
         vehicleName = findViewById(R.id.addCarName);
@@ -295,7 +281,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
                     ObjectBox.get().boxFor(SavedConfig.class).put(c);
                     finish();
                 }else{
-                    DB.makeCustomToast(SettingsActivity.this, "Please setup a vehicle");
+                    DB.makeCustomToast(SettingsActivity.this, getString(R.string.setupVehicle));
                 }
 
             }
@@ -383,9 +369,9 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
     }
 
     private int whatType() {
-        if (type.getText().toString().equals("Motorcycle")) {
+        if (type.getText().toString().equals(getString(R.string.motorcycle))) {
             return 2;
-        } else if (type.getText().toString().equals("Car")) {
+        } else if (type.getText().toString().equals(getString(R.string.car))) {
             return 1;
         } else {
             return 0;
@@ -396,11 +382,11 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         String s = "";
 
         if (v.getFuel() == 0) {
-            s = "Diesel";
+            s = getString(R.string.diesel);
         } else if (v.getFuel() == 1) {
-            s = "Gasoline";
+            s = getString(R.string.gasoline);
         } else if (v.getFuel() == 2) {
-            s = "Electric";
+            s = getString(R.string.electric);
         }
 
         return s;
@@ -410,9 +396,9 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         String s = "";
 
         if (v.getType() == 1) {
-            s = "Car";
+            s = getString(R.string.car);
         } else if (v.getType() == 2) {
-            s = "Motorcycle";
+            s = getString(R.string.motorcycle);
         }
 
         return s;
@@ -422,8 +408,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
     public void vehiclePressed(Vehicle vehicle, int position, boolean starting) {
         if(!adding){
             if(!starting){
-                DB.makeCustomToast(this, vehicle.getName() + " selected!");
-
+                DB.makeCustomToast(this, vehicle.getName() + " " + getString(R.string.selected));
             }
             currentVehicle = position;
             SavedConfig c = ObjectBox.get().boxFor(SavedConfig.class).get(1);

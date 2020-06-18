@@ -23,6 +23,8 @@ import com.vx.dyvide.R;
 import com.vx.dyvide.controller.adapters.FAQAdapter;
 import com.vx.dyvide.controller.adapters.TollAdapter;
 import com.vx.dyvide.controller.adapters.VehicleAdapter;
+import com.vx.dyvide.model.DB.ObjectBox;
+import com.vx.dyvide.model.DB.SavedConfig;
 import com.vx.dyvide.model.Vehicle;
 
 import java.lang.reflect.Type;
@@ -68,7 +70,7 @@ public class SupportFragment extends Fragment {
         });
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("0/questions");
+        DatabaseReference myRef = database.getReference("0/"+ ObjectBox.get().boxFor(SavedConfig.class).get(1).lan +"/0/questions");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
