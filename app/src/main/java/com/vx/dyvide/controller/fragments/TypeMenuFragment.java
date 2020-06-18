@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.vx.dyvide.R;
+import com.vx.dyvide.model.DB.DB;
 
 public class TypeMenuFragment extends Fragment {
 
@@ -17,6 +18,7 @@ public class TypeMenuFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        DB.setLanguage(getActivity());
         return inflater.inflate(R.layout.menu_fragment, container, false);
 
 

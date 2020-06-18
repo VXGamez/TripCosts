@@ -62,13 +62,16 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
             }
         });
 
-        holder.vehicleName.setText(vehicles.get(position).getName());
+
         if(vehicles.get(position).getType()==1){
             holder.vehicleIcon.setBackgroundResource(R.drawable.coche);
+            holder.vehicleName.setText(vehicles.get(position).getName());
         }else if(vehicles.get(position).getType()==2){
             holder.vehicleIcon.setBackgroundResource(R.drawable.moto);
+            holder.vehicleName.setText(vehicles.get(position).getName());
         }else if(vehicles.get(position).getType()==-5){
             holder.vehicleIcon.setBackgroundResource(R.drawable.add);
+            holder.vehicleName.setText(mContext.getString(R.string.add));
         }
     }
 

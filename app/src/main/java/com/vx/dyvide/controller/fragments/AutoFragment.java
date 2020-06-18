@@ -180,7 +180,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+        DB.setLanguage(getActivity());
         View view = inflater.inflate(R.layout.auto_fragment, container, false);
 
         autocompleteOrigin = (AutocompleteSupportFragment) this.getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);

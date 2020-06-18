@@ -72,7 +72,7 @@
     <string name="totalTollCost">Total toll cost</string>
     <string name="routeHasTolls">This route has tolls</string>
     <string name="failure">App failure. Please restart the app</string>
-    <string name="total_trip_cost_0_0">totalTripCostInit</string>
+    <string name="total_trip_cost_0_0">Total trip cost: 0.0 €</string>
     <string name="totalKMInit">Total KM: 0</string>
     <string name="to_divide_between">To divide between:</string>
     <string name="total_passengers">Total passengers</string>
@@ -98,6 +98,9 @@
     <string name="finish">Finish</string>
     <string name="contact">CONTACT</string>
     <string name="faq">FAQ</string>
-
-
+    <string name="catal">Catalan</string>
+    <string name="english">English</string>
+    <string name="spanish">Spanish</string>
+    <string name="loading3Punts">Loading...</string>
+    <string name="add">Add</string>
 </resources>

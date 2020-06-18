@@ -31,6 +31,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.vx.dyvide.R;
+import com.vx.dyvide.model.DB.DB;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +56,7 @@ public class MoreInfoFragment extends BottomSheetDialogFragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
+        DB.setLanguage(getActivity());
 
         View view = inflater.inflate(R.layout.moreinfo_fragment, container, false);
 

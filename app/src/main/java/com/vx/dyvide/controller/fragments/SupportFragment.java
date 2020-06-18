@@ -23,6 +23,7 @@ import com.vx.dyvide.R;
 import com.vx.dyvide.controller.adapters.FAQAdapter;
 import com.vx.dyvide.controller.adapters.TollAdapter;
 import com.vx.dyvide.controller.adapters.VehicleAdapter;
+import com.vx.dyvide.model.DB.DB;
 import com.vx.dyvide.model.DB.ObjectBox;
 import com.vx.dyvide.model.DB.SavedConfig;
 import com.vx.dyvide.model.Vehicle;
@@ -50,6 +51,7 @@ public class SupportFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        DB.setLanguage(getActivity());
 
         View view = inflater.inflate(R.layout.support_fragment, container, false);
 

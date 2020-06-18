@@ -50,6 +50,7 @@ public class ManualFragment  extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        DB.setLanguage(getActivity());
 
         View view = inflater.inflate(R.layout.manual_fragment, container, false);
         tolls = view.findViewById(R.id.tolls);

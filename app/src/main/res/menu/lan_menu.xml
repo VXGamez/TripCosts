@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/eng"
-        android:title="English"/>
+        android:title="@string/english"/>
     <item android:id="@+id/spa"
-        android:title="Spanish" />
+        android:title="@string/spanish" />
     <item android:id="@+id/cat"
-        android:title="Català" />
+        android:title="@string/catal" />
 </menu>

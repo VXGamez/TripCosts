@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Loading..."
+                android:text="@string/loading3Punts"
                 android:fontFamily="@font/montserrat_regular"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />

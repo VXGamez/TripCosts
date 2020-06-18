@@ -55,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
     private MultiStateToggleButton fuelType;
     private ImageButton chooseCar;
     private ImageButton chooseMoto;
-    private ImageButton options;
+    private Button options;
     private EditText vehicleName;
     private boolean adding=false;
     private EditText consum;
@@ -91,14 +91,17 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
             case R.id.eng:
                 c.setLan("en");
                 ObjectBox.get().boxFor(SavedConfig.class).put(c);
+                options.setBackgroundResource(R.drawable.en_flag);
                 return true;
             case R.id.spa:
                 c.setLan("es");
                 ObjectBox.get().boxFor(SavedConfig.class).put(c);
+                options.setBackgroundResource(R.drawable.es_flag);
                 return true;
             case R.id.cat:
                 c.setLan("ca");
                 ObjectBox.get().boxFor(SavedConfig.class).put(c);
+                options.setBackgroundResource(R.drawable.ca_flag);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -137,8 +140,17 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
                 popup.show();
             }
         });
+        String lan = ObjectBox.get().boxFor(SavedConfig.class).get(1).lan;
+        if(lan.equals("en")){
+            options.setBackgroundResource(R.drawable.en_flag);
+        }else if(lan.equals("es")){
+            options.setBackgroundResource(R.drawable.es_flag);
+        }else if(lan.equals("ca")){
+            options.setBackgroundResource(R.drawable.ca_flag);
+        }
         fuelType.setColorRes(R.color.color_pressed, R.color.color_released);
         carNameFuel = findViewById(R.id.carNameFuel);
+
         editName = findViewById(R.id.editCarName);
         editName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -416,13 +428,37 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
             ObjectBox.get().boxFor(SavedConfig.class).put(c);
             newCar.setVisibility(View.GONE);
             carInfo.setVisibility(View.VISIBLE);
-            carNameFuel.setText(new StringBuilder().append(fuelType(vehicle)).append(" ").append(vehicleType(vehicle)).toString());
+            carNameFuel.setText(makeCurrentCarName(vehicle));
             editName.setText(vehicle.getName());
             name.setText(vehicle.getName());
             editConsu.setText(String.format("%s", vehicle.getConsum()));
         }
     }
 
+
+    private String makeCurrentCarName(Vehicle vehicle){
+        String n="";
+        String ft = fuelType(vehicle);
+        String v = vehicleType(vehicle);
+        String lan = ObjectBox.get().boxFor(SavedConfig.class).get(1).lan;
+        if(lan.equals("en")){
+            n = ft + " " + v;
+        }else if(lan.equals("es")){
+            if(ft.equals(getString(R.string.gasoline))){
+                n = v + " de " + ft;
+            }else{
+                n = v + " " + ft;
+            }
+        }else if(lan.equals("ca")){
+            if(ft.equals(getString(R.string.gasoline))){
+                n = v + " de " + ft;
+            }else{
+                n = v + " " + ft;
+            }
+        }
+
+        return n;
+    }
 
     @Override
     public void onAccept() {

@@ -98,6 +98,10 @@
     <string name="finish">Finish</string>
     <string name="contact">CONTACT</string>
     <string name="faq">FAQ</string>
-
+    <string name="english">English</string>
+    <string name="spanish">Spanish</string>
+    <string name="catal">Catalan</string>
+    <string name="loading3Punts">Loading...</string>
+    <string name="add">Add</string>
 
 </resources>

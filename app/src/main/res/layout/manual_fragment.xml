@@ -133,15 +133,17 @@
             android:fontFamily="@font/montserrat_semibold"
             android:text="@string/calculate"
             android:textAllCaps="true"
+            android:layout_centerHorizontal="true"
             android:textColor="#FFFF"
             android:textSize="20dp"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
+            android:layout_centerHorizontal="true"
             android:fontFamily="@font/montserrat_light"
             android:text="@string/please_use_euros_as_units"
             android:textAlignment="center"

@@ -86,7 +86,7 @@ public class ErrorDialog {
         tvTitle.setText(title);
         tvSubtitle = (TextView) mDialog.findViewById(R.id.dialog_error_subtitle);
         tvSubtitle.setText(message);
-
+        tvSubtitle.setTextSize(15f);
         btnAccept = (Button) mDialog.findViewById(R.id.dialog_error_button);
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
