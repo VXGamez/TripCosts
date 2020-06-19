@@ -16,16 +16,13 @@
     <string name="language_dialog_title">Idioma</string>
     <string name="next">Següent</string>
 
-    <!--FALTA REPASSAR-->
-    <string name="toll_content">"Si el vostre viatge inclou peatges, es poden afegir al cost. Sempre podeu canviar aquesta configuració"</string>
-    <string name="more_info">Descobriu més contingut dins de l\'aplicació! No només hi ha més funcionalitats disponibles, sinó molt més per venir!</string>
-    <string name="dyvide_info">Calcula el cost d’un viatge amb el cotxe i divideix-lo fàcilment amb els teus amics. Configureu les vostres preferències personals i calculeu fàcilment les despeses del vostre vehicle.</string>
-    <string name="welcome_info">Amb Dyvide, les despeses del vostre cotxe deixaran de ser un mal de cap. Seguiu aquestes instruccions per veure com dyvide us pot ajudar.</string>
-    <string name="support">Benvingut a l\'assistència de Dyvide. Esperem que estiguis aquí per curiositat i no necessitat. Però, si de veritat, necessiteu ajuda, seguiu llegint.</string>
-    <string name="supportMore">Per a qualsevol problema amb l\'aplicació, ompliu el formulari que apareix amb el vostre problema. Esperem poder-lo resoldre el més ràpidament possible perquè no suposi cap inconvenient per a vostè</string>
-    <string name="functionalities">Si no teniu cap problema, podeu ajudar-lo! Si teniu idees sobre com millorar l’aplicació, qualsevol tipus: funcions de disseny adequades al disseny, qualsevol cosa que penseu que sigui útil per a altres usuaris, és una contribució valorada i ho agraïm. Podeu fer-ho a través del formulari de contacte següent. No oblidem, però, sempre estem treballant per millorar, alguns ja podrien sortir en marxa ;)</string>
-    <!--              -->
-
+    <string name="toll_content">"Si el teu viatge inclou peatges, es poden afegir al cost. Sempre podràs canviar-ho en funció del que necessitis"</string>
+    <string name="more_info">Descobreix més contingut dins de l\'aplicació! No només hi ha més funcionalitats disponibles, sinó molt més per venir!</string>
+    <string name="dyvide_info">Calcula el cost d’un viatge amb el teu vehicle i divideix-lo fàcilment amb els teus amics. Configura les teves preferències personals i calcula fàcilment les despeses del teu vehicle.</string>
+    <string name="welcome_info">Amb Dyvide, les despeses del teu vehicle deixaran de ser un mal de cap. Segueix aquestes instruccions per veure com dyvide pot ajudar-te</string>
+    <string name="support">Benvingut a l\'assistència de Dyvide. Esperem que estiguis aquí per curiositat i no necessitat. Però, si de veritat, necessites ajuda, segueix llegint.</string>
+    <string name="supportMore">Per a qualsevol problema amb l\'aplicació, omple el formulari que apareix amb el teu problema. Esperem poder-lo resoldre el més ràpidament possible perquè no suposi cap inconvenient per a tu</string>
+    <string name="functionalities">Si no tens cap problema, pots ajudar-nos igualment! Si tens idees sobre com millorar l’aplicació, qualsevol tipus: funcionalitats, millores en el disseny, qualsevol cosa que penseu que sigui útil per a altres usuaris, és una contribució valorada i ho agraïm. Pots fer-ho a través del formulari de contacte següent. Recorda, però, sempre estem treballant per millorar, alguns ja podrien estar de camí ;)</string>
     <string name="add_a_new_vehicle">Afegiu un vehicle nou</string>
     <string name="choose_vehicle_type">Tipus de vehicle:</string>
     <string name="vehicle_name">Nom del vehicle:</string>

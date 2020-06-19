@@ -16,18 +16,14 @@
     <string name="language_dialog_title">Idioma</string>
     <string name="next">Siguiente</string>
 
-    <!--FALTA REPASSAR-->
-    <string name="toll_content">Si su viaje incluye peajes, se pueden agregar al costo. Siempre puedes cambiar esta configuración como quieras</string>
+    <string name="toll_content">Si su viaje incluye peajes, se pueden agregar al coste total. Siempre podras cambiar esto en función de lo que necesites.</string>
     <string name="more_info">¡Descubre más contenido dentro de la aplicación! ¡No solo hay más funcionalidades disponibles, sino mucho más por venir!</string>
-    <string name="dyvide_info">Calcule el costo de un viaje con su automóvil y divídalo fácilmente con sus amigos. Configure sus preferencias personales y calcule fácilmente los gastos de su vehículo.</string>
-    <string name="welcome_info">¡Con Dyvide los gastos de su automóvil ya no serán un dolor de cabeza! Siga estas instrucciones para ver cómo dyvide puede ayudarlo a hacerlo.</string>
-    <string name="support">Bienvenido al soporte de Dyvide. Esperamos que esté aquí por curiosidad y no sea necesario. Pero si realmente necesitas ayuda, sigue leyendo.</string>
-    <string name="supportMore">Para cualquier problema con la aplicación, complete el formulario con su problema. Esperamos poder resolverlo lo más rápido posible para que no le moleste</string>
-    <string name="functionalities">¡Si no tienes ningún problema, puedes ayudar de todos modos! Si tiene alguna idea sobre cómo mejorar la aplicación, cualquier tipo: diseño, funcionalidades, cualquier cosa que pueda pensar que pueda ser útil para otros usuarios, es una contribución valiosa y realmente lo apreciamos. Puede hacerlo a través del formulario de contacto a continuación. Sin embargo, no se olvide, siempre estamos trabajando para mejorar, algunos ya podrían estar en camino ;)</string>
-    <!--              -->
-
-
-    <string name="add_a_new_vehicle">Añadir nuevo Vehiculo</string>
+    <string name="dyvide_info">Calcula el coste de un viaje con tu vehículo y divídelo fácilmente con tus amigos. Configura tus preferencias personales y calcula fácilmente los gastos de tu vehículo.</string>
+    <string name="welcome_info">¡Con Dyvide los gastos de tu vehículo ya no serán un dolor de cabeza! Sigue estas instrucciones para ver cómo dyvide puede ayudarte a hacerlo.</string>
+    <string name="support">Bienvenido al soporte de Dyvide. Esperamos que estés aquí por curiosidad y no por necesitad. Pero si realmente necesitas ayuda, sigue leyendo.</string>
+    <string name="supportMore">Para cualquier problema con la aplicación, completa el formulario con tu problema. Esperamos poder resolverlo lo más rápido posible para que no suponga una molestia</string>
+    <string name="functionalities">¡Si no tienes ningún problema, puedes ayudar de todos modos! Si tienes alguna idea sobre cómo mejorar la aplicación, cualquier tipo: diseño, funcionalidades, cualquier cosa que puedas pensar que pueda ser útil para otros usuarios, es una contribución valiosa. Puedes hacerlo a través del formulario de contacto a continuación. Sin embargo, recurda, siempre estamos trabajando para mejorar, algunos ya podrían estar en camino ;)</string>
+   <string name="add_a_new_vehicle">Añadir nuevo Vehiculo</string>
     <string name="choose_vehicle_type">Elige tipo de vehiculo:</string>
     <string name="vehicle_nameAdd">Nombre del Vehiculo:</string>
     <string name="consumption_every_100kmAdd">Consumo cada 100km:</string>
