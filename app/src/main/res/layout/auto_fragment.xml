@@ -101,18 +101,31 @@
             </LinearLayout>
 
 
-
-            <fragment
+            <RelativeLayout
                 android:layout_width="match_parent"
+                android:layout_height="250dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_height="250dp"
-                android:id="@+id/map"
-                class="com.google.android.gms.maps.SupportMapFragment"
-                >
-                <ImageView android:id="@+id/ivMapTransparent" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@android:color/transparent" />
-            </fragment>
+                android:layout_marginTop="10dp">
+                <fragment
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:id="@+id/map"
+                    android:layout_centerInParent="true"
+                    class="com.google.android.gms.maps.SupportMapFragment">
+                    <ImageView android:id="@+id/ivMapTransparent" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@android:color/transparent" />
+                </fragment>
+                <ImageButton
+                    android:id="@+id/enlarge"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/ic_expand"
+                    />
+            </RelativeLayout>
 
 
             <RelativeLayout

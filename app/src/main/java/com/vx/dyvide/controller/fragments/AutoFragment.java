@@ -62,6 +62,7 @@ import com.vx.dyvide.controller.adapters.TollAdapter;
 import com.vx.dyvide.controller.callbacks.TollListCallback;
 import com.vx.dyvide.controller.dialogs.ErrorDialog;
 import com.vx.dyvide.controller.dialogs.LoadingDialog;
+import com.vx.dyvide.controller.dialogs.MapDialog;
 import com.vx.dyvide.controller.dialogs.PriceDialog;
 import com.vx.dyvide.controller.restAPI.Michelin.callbacks.MichelinCallback;
 import com.vx.dyvide.controller.restAPI.Michelin.managers.RouteManager;
@@ -90,6 +91,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     private ImageButton clearButtonOrigin;
     private ImageButton clearButtonDestination;
 
+    private ImageButton enlargeMap;
 
     private EditText totalPassengers;
     private TextView totalKM;
@@ -110,6 +112,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     private Switch tollSwitch;
     private boolean wantsTolls;
     private LinearLayout tolls;
+
+    private MapDialog mapDialog;
 
     private ImageButton swapDestinations;
 
@@ -257,7 +261,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         etTextInputD.setTextSize(12.5f);
         etTextInputD.setTypeface(typeface);
 
-
+        mapDialog = new MapDialog(getActivity());
 
         fViewD.findViewById(R.id.places_autocomplete_search_button).setVisibility(View.GONE);
         ImageButton clearOriginD = fViewD.findViewById(R.id.places_autocomplete_clear_button);
@@ -304,6 +308,14 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             }
         });
 
+
+        enlargeMap= view.findViewById(R.id.enlarge);
+        enlargeMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapDialog.showEnlargedMap(originMarker, destinationMarker, currentPolyline);
+            }
+        });
 
         tolls = view.findViewById(R.id.tolls);
         tollSwitch = view.findViewById(R.id.tollSwitch);
@@ -546,7 +558,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             if(origin!=null && destination!=null){
                 hideKeyboard(getActivity());
                 infoRecieved = false;
-                LoadingDialog.getInstance(getActivity()).showLoadingDialog(getString(R.string.loading));
+                String[] a = getResources().getStringArray(R.array.health_messages);
+                LoadingDialog.getInstance(getActivity()).showLoadingDialog( a[DB.getRandomNum(0, a.length-1)]);
                 RouteManager.getInstance(this).getRouteHeader(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
             }
         }

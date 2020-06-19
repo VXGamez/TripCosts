@@ -9,6 +9,19 @@
         <item>Electrico</item>
     </string-array>
 
+
+    <string-array name="health_messages">
+        <item>Un mensaje de texto o llamada podría arruinarlo todo.</item>
+        <item>Antes de partir en un viaje largo en automóvil, asegurate de que tu vehículo esté en excelentes condiciones</item>
+        <item>Asegúrate de que todos los pasajeros se abrochan el cinturón de seguridad</item>
+        <item>Presta mucha atención y obedece las señales de stop y los semáforos</item>
+        <item>Deténgase y tome descansos cada dos horas, incluso si no tiene sueño.</item>
+        <item>Si conduce un vehículo de alquiler, familiarícese con el automóvil y todos sus equipos.</item>
+        <item>Nunca beba alcohol antes de su viaje. Si bien no puede intoxicarse con una cerveza, tendrá sueño</item>
+    </string-array>
+
+
+
     <string name="deleteConfirmation">¿Estás seguro de que quieres eliminar este vehículo?</string>
     <string name="vehicleUpdated">Vehículo actualizado</string>
     <string name="notAvailable">Aun no está disponible</string>

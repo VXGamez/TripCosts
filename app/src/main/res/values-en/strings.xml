@@ -9,6 +9,17 @@
         <item>Electric</item>
     </string-array>
 
+
+    <string-array name="health_messages">
+        <item>One text or call could wreck it all.</item>
+        <item>Before setting off on a long car trip, be sure your vehicle is in prime condition</item>
+        <item>Make sure everyone in the car buckles his or her seatbelt</item>
+        <item>Pay close attention to and obey stop signs and traffic lights.</item>
+        <item>Pull over and take breaks every couple of hours, even if you don’t feel sleepy.</item>
+        <item>If you are driving a rental vehicle, familiarize yourself with the car and all of its equipment</item>
+        <item>Never drink any alcohol before your trip. While you may not become intoxicated from one beer, you will become sleepy</item>
+    </string-array>
+
     <string name="deleteConfirmation">Are you sure you want to delete this vehicle?</string>
     <string name="vehicleUpdated">Vehicle updated</string>
     <string name="notAvailable">Not available yet</string>

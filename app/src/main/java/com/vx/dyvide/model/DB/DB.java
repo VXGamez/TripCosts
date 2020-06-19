@@ -21,6 +21,7 @@ import com.vx.dyvide.model.Vehicle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class DB {
 
@@ -122,5 +123,15 @@ public class DB {
             lan = "en";
         }
         DB.setAppLocale(x, lan);
+    }
+
+    public static int getRandomNum(int min, int max) {
+
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
     }
 }

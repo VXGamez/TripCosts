@@ -9,6 +9,16 @@
         <item>Elèctric</item>
     </string-array>
 
+    <string-array name="health_messages">
+        <item>Un text o trucada podria acabar-ho tot</item>
+        <item>Abans de partir en un llarg viatge amb cotxe, assegureu-vos que el vehicle estigui en bones condicions</item>
+        <item>Assegureu-vos que cadascú al cotxe porta el cinturó de seguretat</item>
+        <item>Presta molta atenció i obeeix els senyals de stop i els semàfors.</item>
+        <item>Estireu i feu descansos cada dues hores, fins i tot si no teniu somni.</item>
+        <item>Si conduïu un vehicle de lloguer, familiariu-vos amb el cotxe i tots els seus equips</item>
+        <item>Mai beguis alcohol abans del viatge. Tot i que és possible que no t’embriaguis amb una cervesa, quedaries adormit</item>
+    </string-array>
+
     <string name="deleteConfirmation">Segur vols eliminar aquest vehicle?</string>
     <string name="vehicleUpdated">Vehicle actualitzat</string>
     <string name="notAvailable">No disponible encara</string>

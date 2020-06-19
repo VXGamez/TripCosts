@@ -22,12 +22,7 @@ public class LoadingDialog {
     private Context mContext;
     private Dialog mDialog;
 
-    private TextView tvTitle;
     private TextView tvSubtitle;
-    private ProgressBar loading;
-    private ProgressBar bar;
-    private LinearLayout linearLoading;
-    private TextView totalDownloaded;
 
     public static LoadingDialog getInstance(Context context) {
         if (sManager == null) {
@@ -48,16 +43,14 @@ public class LoadingDialog {
 
     public void showLoadingDialog(String message) {
         mDialog.setContentView(R.layout.dialog_loading);
+        tvSubtitle = (TextView) mDialog.findViewById(R.id.dialog_subtitle);
+        tvSubtitle.setTextSize(15f);
+        tvSubtitle.setText(message);
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mDialog.show();
     }
 
-
-    public void updateProgress(int progress, int total){
-        bar.setProgress(progress, true);
-        totalDownloaded.setText(progress+"/"+total);
-    }
 
 
 }
