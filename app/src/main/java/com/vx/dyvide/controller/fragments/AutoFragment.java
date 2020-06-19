@@ -225,6 +225,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 }
                 resetValues();
                 originMarker.remove();
+                originMarker = null;
                 origin = null;
                 clearButtonOrigin.setVisibility(View.GONE);
             }
@@ -286,6 +287,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                     currentPolyline=null;
                 }
                 destinationMarker.remove();
+                originMarker = null;
                 destination = null;
                 clearButtonDestination.setVisibility(View.GONE);
             }

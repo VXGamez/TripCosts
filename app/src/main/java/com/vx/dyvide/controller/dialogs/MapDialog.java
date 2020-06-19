@@ -67,6 +67,7 @@ public class MapDialog implements OnMapReadyCallback {
     }
 
     public void cancelDialog(){
+
         map.clear();
         mDialog.dismiss();
     }
@@ -171,5 +172,6 @@ public class MapDialog implements OnMapReadyCallback {
             poly.addAll(p.getPoints());
             map.addPolyline(poly);
         }
+        updateMapZoom();
     }
 }
