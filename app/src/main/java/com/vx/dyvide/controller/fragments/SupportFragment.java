@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,8 @@ import com.vx.dyvide.model.DB.ObjectBox;
 import com.vx.dyvide.model.DB.SavedConfig;
 import com.vx.dyvide.model.Vehicle;
 
+import org.w3c.dom.Text;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +39,7 @@ import java.util.Map;
 public class SupportFragment extends Fragment {
 
     private RecyclerView faqRecycle;
+    private TextView notAvailable;
     private Button form;
 
     public static SupportFragment newInstance(int page, String title) {
@@ -61,6 +65,8 @@ public class SupportFragment extends Fragment {
         faqRecycle.setLayoutManager(manager2);
         faqRecycle.setAdapter(adapter);
 
+        notAvailable = view.findViewById(R.id.notAvailable);
+        notAvailable.setVisibility(View.GONE);
         form = view.findViewById(R.id.supportForm);
         form.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,28 +77,36 @@ public class SupportFragment extends Fragment {
             }
         });
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("0/"+ ObjectBox.get().boxFor(SavedConfig.class).get(1).lan +"/0/questions");
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                try {
-                    if (dataSnapshot.getValue() != null) {
-                        ArrayList<HashMap<String, String>> value = (ArrayList<HashMap<String, String>>) dataSnapshot.getValue();
-                        FAQAdapter adapter = new FAQAdapter(getActivity(), value);
-                        faqRecycle.setAdapter(adapter);
-                        System.out.println();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                Log.w("", "Failed to read value.", error.toException());
-            }
-        });
+        if(DB.noInternet(getActivity())){
+            notAvailable.setVisibility(View.VISIBLE);
+            faqRecycle.setVisibility(View.GONE);
+        }else{
+            notAvailable.setVisibility(View.GONE);
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("0/"+ ObjectBox.get().boxFor(SavedConfig.class).get(1).lan +"/0/questions");
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    try {
+                        if (dataSnapshot.getValue() != null) {
+                            ArrayList<HashMap<String, String>> value = (ArrayList<HashMap<String, String>>) dataSnapshot.getValue();
+                            FAQAdapter adapter = new FAQAdapter(getActivity(), value);
+                            faqRecycle.setAdapter(adapter);
+                            System.out.println();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    Log.w("", "Failed to read value.", error.toException());
+                }
+            });
+        }
+
 
 
         return view;

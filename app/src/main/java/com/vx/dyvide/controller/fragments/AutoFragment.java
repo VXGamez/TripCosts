@@ -58,6 +58,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.vx.dyvide.R;
+import com.vx.dyvide.controller.activities.SettingsActivity;
 import com.vx.dyvide.controller.adapters.TollAdapter;
 import com.vx.dyvide.controller.callbacks.TollListCallback;
 import com.vx.dyvide.controller.dialogs.ErrorDialog;
@@ -72,6 +73,10 @@ import com.vx.dyvide.model.DB.SavedConfig;
 import com.vx.dyvide.model.HERE.directionhelpers.FetchURL;
 import com.vx.dyvide.model.HERE.directionhelpers.TaskLoadedCallback;
 import com.vx.dyvide.model.Michelin.Summary;
+
+import org.honorato.multistatetogglebutton.MultiStateToggleButton;
+import org.honorato.multistatetogglebutton.ToggleButton;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import static com.vx.dyvide.controller.fragments.ManualFragment.round;
@@ -108,6 +113,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     private float totalTripCost;
 
     private boolean infoRecieved=false;
+
+    private MultiStateToggleButton routeChosen;
 
     private Switch tollSwitch;
     private boolean wantsTolls;
@@ -262,7 +269,9 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         etTextInputD.setTextSize(12.5f);
         etTextInputD.setTypeface(typeface);
 
-        mapDialog = new MapDialog(getActivity());
+        if(!DB.noInternet(getActivity())){
+            mapDialog = new MapDialog(getActivity());
+        }
 
         fViewD.findViewById(R.id.places_autocomplete_search_button).setVisibility(View.GONE);
         ImageButton clearOriginD = fViewD.findViewById(R.id.places_autocomplete_clear_button);
@@ -276,6 +285,19 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 clearOriginD.setVisibility(View.GONE);
             }
         });
+
+        routeChosen = (MultiStateToggleButton) view.findViewById(R.id.routes);
+        routeChosen.setOnValueChangedListener(new ToggleButton.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(int value) {
+
+
+            }
+        });
+        routeChosen.setVisibility(View.GONE);
+        routeChosen.setColorRes(R.color.color_pressed, R.color.color_released);
+
+
         clearButtonDestination = view.findViewById(R.id.clearDestination);
         clearButtonDestination.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -562,6 +584,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 infoRecieved = false;
                 String[] a = getResources().getStringArray(R.array.health_messages);
                 LoadingDialog.getInstance(getActivity()).showLoadingDialog( a[DB.getRandomNum(0, a.length-1)]);
+                routeChosen.setVisibility(View.GONE);
                 RouteManager.getInstance(this).getRouteHeader(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
             }
         }
@@ -731,8 +754,8 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     }
 
     @Override
-    public void onHeaderRecieved(Summary body) {
-        if(body.getTollCost()==null && body.getTotalDist()==-.1){
+    public void onHeaderRecieved(ArrayList<Summary> body) {
+        if(body.get(0).getTollCost()==null && body.get(0).getTotalDist()==-.1){
             DB.makeCustomToast(getActivity(),getString(R.string.noRoute));
             map.clear();
             autocompleteOrigin.setText("");
@@ -740,18 +763,52 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             clearButtonOrigin.setVisibility(View.GONE);
             clearButtonDestination.setVisibility(View.GONE);
         }else{
-            if(body.getTollCost().getCar()>0){
+            if(body.size()>1){
+                routeChosen.setVisibility(View.VISIBLE);
+                routeChosen.setElements(finsElements(body));
+                routeChosen.setValue(0);
                 drawRoute();
                 updateTotalTripCost();
-                totalTollCost = body.getTollCost().getCar()/100;
+                totalTollCost = body.get(0).getTollCost().getCar()/100;
                 DB.makeCustomToast(getActivity(),getString(R.string.routeHasTolls));
                 tollSwitch.setVisibility(View.VISIBLE);
                 totalTollCostTXT.setText(getString(R.string.totalTollCost) + ": " + totalTollCost +"€");
                 updateTotalTripCost();
                 RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
+
+            }else{
+                if(body.get(0).getTollCost().getCar()>0){
+                    drawRoute();
+                    updateTotalTripCost();
+                    totalTollCost = body.get(0).getTollCost().getCar()/100;
+                    DB.makeCustomToast(getActivity(),getString(R.string.routeHasTolls));
+                    tollSwitch.setVisibility(View.VISIBLE);
+                    totalTollCostTXT.setText(getString(R.string.totalTollCost) + ": " + totalTollCost +"€");
+                    updateTotalTripCost();
+                    RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
+                }
             }
         }
 
+    }
+
+    private String[] finsElements(ArrayList<Summary> body) {
+        ArrayList<String> s = new ArrayList<>();
+
+        for(Summary k : body){
+            String n = "Via " + ((ArrayList<String>)k.getNames()).get(0);
+            if(((ArrayList<String>)k.getNames()).size()>1){
+                for(int i=1; i<((ArrayList<String>)k.getNames()).size() ;i++){
+                    n+=" + " + ((ArrayList<String>)k.getNames()).get(i);
+                }
+            }
+            s.add(n);
+        }
+
+        String[] stockArr = new String[s.size()];
+        stockArr = s.toArray(stockArr);
+
+        return stockArr;
     }
 
     public void hideKeyboard(Activity activity) {

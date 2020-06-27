@@ -66,7 +66,7 @@ public class RouteManager {
 
         //vehicle type: 0:Car | 1:Truck | 2:On foot | 3: Cycle | 4:Moto
 
-        Call<String> call = michelinService.getHeader(makeSteps(origin, destination), makeConsumption(consumption), fuelCost, "EUR",  MichelinINFO.API_KEY, "onResponse");
+        Call<String> call = michelinService.getHeader(makeSteps(origin, destination), makeConsumption(consumption), fuelCost, "EUR",  MichelinINFO.API_KEY, true,"onResponse");
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -137,7 +137,7 @@ public class RouteManager {
 
     }
 
-    private Summary parseJsonIti(String json) {
+    private ArrayList<Summary> parseJsonIti(String json) {
         Gson gson = new Gson();
         StringBuilder sb = new StringBuilder(json);
 
@@ -147,11 +147,13 @@ public class RouteManager {
 
         String result = sb.toString();
         if(result.contains("errorCode")){
-            return new Summary(null, -.1);
+            ArrayList<Summary> l = new ArrayList<>();
+            l.add(new Summary(null, -.1));
+            return l;
         }else{
             Iti h = gson.fromJson(result, Iti.class);
             ArrayList<Summary> r = (ArrayList<Summary>) h.getHeader().getSummaries();
-            return r.get(0);
+            return r;
         }
 
     }

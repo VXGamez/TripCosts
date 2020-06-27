@@ -12,7 +12,7 @@ import retrofit2.Response;
 
 public interface MichelinCallback {
     
-    void onHeaderRecieved(Summary body);
+    void onHeaderRecieved(ArrayList<Summary>  body);
 
     void onHeaderFailure(Throwable throwable);
 

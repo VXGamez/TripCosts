@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.vx.dyvide.model.Vehicle;
 
 import java.lang.reflect.Type;
+import java.sql.Date;
 import java.util.ArrayList;
 
 import io.objectbox.annotation.Entity;

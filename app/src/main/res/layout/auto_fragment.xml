@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:mstb="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -103,7 +104,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="290dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp">
@@ -111,7 +112,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:id="@+id/map"
-                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"
                     class="com.google.android.gms.maps.SupportMapFragment">
                     <ImageView android:id="@+id/ivMapTransparent" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@android:color/transparent" />
                 </fragment>
@@ -120,11 +121,21 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="50dp"
                     android:layout_marginRight="10dp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/ic_expand"
                     />
+                <org.honorato.multistatetogglebutton.MultiStateToggleButton
+                    android:id="@+id/routes"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#80000000"
+                    android:fontFamily="@font/montserrat_regular"
+                    mstb:values="@array/fuel_types" />
             </RelativeLayout>
 
 

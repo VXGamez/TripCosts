@@ -10,6 +10,9 @@ public class Summary {
     @SerializedName("totalDist")
     @Expose
     private Double totalDist;
+    @SerializedName("names")
+    @Expose
+    private Object names;
     @SerializedName("totalTime")
     @Expose
     private Double totalTime;
@@ -38,6 +41,14 @@ public class Summary {
     public Summary(TollCost tollCost, Double totalDist) {
         this.tollCost = tollCost;
         this.totalDist = totalDist;
+    }
+
+    public Object getNames() {
+        return names;
+    }
+
+    public void setNames(Object names) {
+        this.names = names;
     }
 
     public Double getTotalDist() {
