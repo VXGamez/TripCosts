@@ -73,6 +73,7 @@ import com.vx.dyvide.model.DB.SavedConfig;
 import com.vx.dyvide.model.HERE.directionhelpers.FetchURL;
 import com.vx.dyvide.model.HERE.directionhelpers.TaskLoadedCallback;
 import com.vx.dyvide.model.Michelin.Summary;
+import com.vx.dyvide.model.Vehicle;
 
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 import org.honorato.multistatetogglebutton.ToggleButton;
@@ -269,7 +270,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         etTextInputD.setTextSize(12.5f);
         etTextInputD.setTypeface(typeface);
 
-        if(!DB.noInternet(getActivity())){
+        if(!DB.noInternet(getActivity()) && mapDialog==null){
             mapDialog = new MapDialog(getActivity());
         }
 
@@ -764,11 +765,17 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
             clearButtonDestination.setVisibility(View.GONE);
         }else{
             if(body.size()>1){
-                routeChosen.setVisibility(View.VISIBLE);
+                routeChosen.setVisibility(View.GONE); //TODO: CANVIAR A VISIBLE
                 routeChosen.setElements(finsElements(body));
                 routeChosen.setValue(0);
                 drawRoute();
                 updateTotalTripCost();
+                /*Vehicle current = DB.getCurrentVehicle();
+                if(current.getType() == 1){
+                    totalTollCost = body.get(0).getTollCost().getCar()/100;
+                }else if(current.getType() == 2){
+                    totalTollCost = body.get(0).getTollCost().getMoto()/100;
+                }*/
                 totalTollCost = body.get(0).getTollCost().getCar()/100;
                 DB.makeCustomToast(getActivity(),getString(R.string.routeHasTolls));
                 tollSwitch.setVisibility(View.VISIBLE);

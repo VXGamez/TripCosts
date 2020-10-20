@@ -254,6 +254,8 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         chooseCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                chooseMoto.setBackgroundResource(R.drawable.roundedxml);
+                chooseCar.setBackgroundResource(R.drawable.roundedxmldark);
                 type.setText(getString(R.string.car));
             }
         });
@@ -262,6 +264,8 @@ public class SettingsActivity extends AppCompatActivity implements VehicleCallba
         chooseMoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                chooseMoto.setBackgroundResource(R.drawable.roundedxmldark);
+                chooseCar.setBackgroundResource(R.drawable.roundedxml);
                 type.setText(getString(R.string.motorcycle));
             }
         });
