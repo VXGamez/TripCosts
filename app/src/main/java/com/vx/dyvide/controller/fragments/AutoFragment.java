@@ -235,6 +235,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 originMarker.remove();
                 originMarker = null;
                 origin = null;
+                totalTripCostTXT.setText(getString(R.string.totalTripCost)+": " + round(0, 2) + "€");
                 clearButtonOrigin.setVisibility(View.GONE);
             }
         });
@@ -312,6 +313,7 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 destinationMarker.remove();
                 originMarker = null;
                 destination = null;
+                totalTripCostTXT.setText(getString(R.string.totalTripCost)+": " + round(0, 2) + "€");
                 clearButtonDestination.setVisibility(View.GONE);
             }
         });
@@ -759,8 +761,14 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
         if(body.get(0).getTollCost()==null && body.get(0).getTotalDist()==-.1){
             DB.makeCustomToast(getActivity(),getString(R.string.noRoute));
             map.clear();
+            LoadingDialog.getInstance(getActivity()).cancelLoadingDialog();
+            this.tolls.setVisibility(View.GONE);
+            this.tollRecycle.setVisibility(View.GONE);
+            this.origin=null;
+            this.destination=null;
             autocompleteOrigin.setText("");
             autocompleteDestination.setText("");
+            totalTripCostTXT.setText(getString(R.string.totalTripCost)+": " + round(0, 2) + "€");
             clearButtonOrigin.setVisibility(View.GONE);
             clearButtonDestination.setVisibility(View.GONE);
         }else{
@@ -777,10 +785,15 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                     totalTollCost = body.get(0).getTollCost().getMoto()/100;
                 }*/
                 totalTollCost = body.get(0).getTollCost().getCar()/100;
-                DB.makeCustomToast(getActivity(),getString(R.string.routeHasTolls));
-                tollSwitch.setVisibility(View.VISIBLE);
-                totalTollCostTXT.setText(getString(R.string.totalTollCost) + ": " + totalTollCost +"€");
-                updateTotalTripCost();
+                if(totalTollCost==0.0f){
+                    tolls.setVisibility(View.GONE);
+                    DB.makeCustomToast(getActivity(),getString(R.string.routeHasNOTolls));
+                }else{
+                    DB.makeCustomToast(getActivity(),getString(R.string.routeHasTolls));
+                    tollSwitch.setVisibility(View.VISIBLE);
+                    totalTollCostTXT.setText(getString(R.string.totalTollCost) + ": " + totalTollCost +"€");
+                    updateTotalTripCost();
+                }
                 RouteManager.getInstance(this).getRouteRoadsheet(origin, destination, DB.getCurrentVehicle().getConsum(), 1.48f, this);
 
             }else{
@@ -840,12 +853,17 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
     @Override
     public void onRoadSheetRecieved(ArrayList<Object> parse) {
         ArrayList<String> tolls = new ArrayList<>();
-
+        LoadingDialog.getInstance(getActivity()).cancelLoadingDialog();
         if(parse.get(0).equals("ERROR")){
             DB.makeCustomToast(getActivity(),getString(R.string.noRoute));
             map.clear();
             autocompleteOrigin.setText("");
+            this.tolls.setVisibility(View.GONE);
+            this.tollRecycle.setVisibility(View.GONE);
+            this.origin=null;
+            this.destination=null;
             autocompleteDestination.setText("");
+            totalTripCostTXT.setText(getString(R.string.totalTripCost)+": " + round(0, 2) + "€");
             clearButtonOrigin.setVisibility(View.GONE);
             clearButtonDestination.setVisibility(View.GONE);
         }else{
@@ -857,7 +875,6 @@ public class AutoFragment extends Fragment implements OnMapReadyCallback, TaskLo
                 }
             }
             infoRecieved = true;
-            LoadingDialog.getInstance(getActivity()).cancelLoadingDialog();
             makeRecycle(tolls);
         }
 

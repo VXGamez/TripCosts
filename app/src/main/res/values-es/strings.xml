@@ -59,6 +59,7 @@
     <string name="setupVehicle">Por favor, configure un vehículo</string>
     <string name="diesel">Diesel</string>
     <string name="gasoline">Gasolina</string>
+    <string name="routeHasNOTolls">Esta ruta no tiene peajes</string>
     <string name="electric">Electrico</string>
     <string name="selected">seleccionado!</string>
     <string name="selectedVehicle">Seleccionado:</string>

@@ -81,6 +81,7 @@
     <string name="loading">Loading</string>
     <string name="noRoute">No route for these coordinates.</string>
     <string name="totalTollCost">Total toll cost</string>
+    <string name="routeHasNOTolls">This route has no tolls</string>
     <string name="routeHasTolls">This route has tolls</string>
     <string name="failure">App failure. Please restart the app</string>
     <string name="total_trip_cost_0_0">Total trip cost: 0.0 €</string>
