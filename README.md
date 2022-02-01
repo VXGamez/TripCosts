@@ -2,9 +2,9 @@
 
 Vehicle Sharing App
 
-First version developed on Android Studio using Java. Started on a Flutter version using Dart for cross compatibility with iOS and Android.
+Android Studio version.
 
-The Flutter development has been stopped for now.
+Hybrid Version with improvements being developed at: https://github.com/VXGamez/Dyvide
 
 
 
